@@ -1,9 +1,9 @@
-using SGM.ResourcesManager;
+using GameFramework.PackageMgr.ResourcesManager;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace SGM.ObjectPoolManager
+namespace GameFramework.ObjectPoolManager
 {
     /// <summary>
     /// Unity 的 ObjectPool 对象池管理器

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace SGM.MUIManager
+namespace GameFramework.GFUIManager
 {
     /// <summary>
     /// 抽象面板基类

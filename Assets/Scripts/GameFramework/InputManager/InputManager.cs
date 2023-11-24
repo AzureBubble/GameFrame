@@ -1,10 +1,10 @@
-using SGM.MonoManager;
+using GameFramework.MonoManager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SGM.MInputManager
+namespace GameFramework.GFInputManager
 {
     public interface IInputManager
     {

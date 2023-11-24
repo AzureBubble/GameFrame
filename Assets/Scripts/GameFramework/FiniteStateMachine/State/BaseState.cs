@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameFramework.Machine
+namespace GameFramework.StateMachine
 {
     /// <summary>
     /// 状态抽象基类

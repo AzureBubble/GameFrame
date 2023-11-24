@@ -1,4 +1,5 @@
-using SGM.MEventCenter;
+using GameFramework.GFEventCenter;
+using GameFramework.NetManager;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,13 +8,13 @@ using UnityEngine.Events;
 using UnityEngine.Networking;
 
 /// <summary>
-/// AB°ü¸üĞÂ¹ÜÀíÆ÷
+/// ABåŒ…æ›´æ–°ç®¡ç†å™¨
 /// </summary>
 public class ABUpdateMgr : MonoBehaviour
 {
-    private readonly string USER_NAME = "root"; // ÓÃ»§Ãû
-    private readonly string PASSWORD = "root"; //ÃÜÂë
-    private readonly string SERVER_IP = "ftp://192.168.168.128/AB/"; // ·şÎñ¶ËIPµØÖ·
+    private readonly string USER_NAME = "root"; // ç”¨æˆ·å
+    private readonly string PASSWORD = "root"; //å¯†ç 
+    private readonly string SERVER_IP = "ftp://192.168.168.128/AB/"; // æœåŠ¡ç«¯IPåœ°å€
 
     private static ABUpdateMgr instance;
 
@@ -30,9 +31,9 @@ public class ABUpdateMgr : MonoBehaviour
         }
     }
 
-    private string localPath; // ±¾µØ´æ·ÅÂ·¾¶
+    private string localPath; // æœ¬åœ°å­˜æ”¾è·¯å¾„
 
-    private string TargetPlatform // Ä¿±êÆ½Ì¨
+    private string TargetPlatform // ç›®æ ‡å¹³å°
     {
         get
         {
@@ -46,18 +47,18 @@ public class ABUpdateMgr : MonoBehaviour
         }
     }
 
-    // ´æ´¢Ô¶¶ËAB°üĞÅÏ¢×Öµä ÓÃÓÚÓë±¾µØAB°ü½øĞĞ¶Ô±È¸üĞÂ
+    // å­˜å‚¨è¿œç«¯ABåŒ…ä¿¡æ¯å­—å…¸ ç”¨äºä¸æœ¬åœ°ABåŒ…è¿›è¡Œå¯¹æ¯”æ›´æ–°
     private Dictionary<string, ABInfo> remoteABDic;
 
-    // ´æ´¢±¾µØAB°üĞÅÏ¢×Öµä ÓÃÓÚÓëÔ¶¶ËAB°üĞÅÏ¢¶Ô±È
+    // å­˜å‚¨æœ¬åœ°ABåŒ…ä¿¡æ¯å­—å…¸ ç”¨äºä¸è¿œç«¯ABåŒ…ä¿¡æ¯å¯¹æ¯”
     private Dictionary<string, ABInfo> localABDic;
 
-    // ´æ´¢´ı´Ó·şÎñ¶ËÏÂÔØµÄAB°üÃû
+    // å­˜å‚¨å¾…ä»æœåŠ¡ç«¯ä¸‹è½½çš„ABåŒ…å
     private List<string> downLoadABList;
 
     private void Awake()
     {
-        // ³õÊ¼»¯´æ·ÅÂ·¾¶
+        // åˆå§‹åŒ–å­˜æ”¾è·¯å¾„
         localPath = Application.persistentDataPath + "/AB/";
         remoteABDic = new Dictionary<string, ABInfo>();
         localABDic = new Dictionary<string, ABInfo>();
@@ -71,37 +72,37 @@ public class ABUpdateMgr : MonoBehaviour
 
     public void CheckUpdateABFile()
     {
-        // Çå³ş»º´æ
+        // æ¸…æ¥šç¼“å­˜
         remoteABDic.Clear();
         localABDic.Clear();
         downLoadABList.Clear();
 
-        // ¼ÓÔØÔ¶¶ËAB°ü¶Ô±ÈÎÄ¼ş
-        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "¿ªÊ¼ÏÂÔØAB°ü¶Ô±ÈÎÄ¼ş");
+        // åŠ è½½è¿œç«¯ABåŒ…å¯¹æ¯”æ–‡ä»¶
+        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "å¼€å§‹ä¸‹è½½ABåŒ…å¯¹æ¯”æ–‡ä»¶");
         DownLoadABCompareFile((isDownLoadABCompareFileOver) =>
         {
-            // Ô¶¶Ë¶Ô±ÈÎÄ¼şÏÂÔØ³É¹¦ºó ¼ÌĞøÏòÏÂÖ´ĞĞ
+            // è¿œç«¯å¯¹æ¯”æ–‡ä»¶ä¸‹è½½æˆåŠŸå ç»§ç»­å‘ä¸‹æ‰§è¡Œ
             if (isDownLoadABCompareFileOver)
             {
-                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "ÏÂÔØAB°ü¶Ô±ÈÎÄ¼şÍê³É,¿ªÊ¼½âÎö");
-                // ½âÎöÔ¶¶ËAB°ü¶Ô±ÈÎÄ¼ş
-                // ¶ÁÈ¡ÏÂÔØµÄAB°ü¶Ô±ÈÎÄ¼ş
+                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "ä¸‹è½½ABåŒ…å¯¹æ¯”æ–‡ä»¶å®Œæˆ,å¼€å§‹è§£æ");
+                // è§£æè¿œç«¯ABåŒ…å¯¹æ¯”æ–‡ä»¶
+                // è¯»å–ä¸‹è½½çš„ABåŒ…å¯¹æ¯”æ–‡ä»¶
                 string remoteABCompareInfo = File.ReadAllText(localPath + "ABCompareInfo_TMP.txt");
                 AnalysisABCompareFileInfo(remoteABCompareInfo, remoteABDic);
-                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "½âÎöÔ¶¶Ë¶Ô±ÈÎÄ¼şÍê³É");
+                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "è§£æè¿œç«¯å¯¹æ¯”æ–‡ä»¶å®Œæˆ");
 
-                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "¿ªÊ¼½âÎö±¾µØ¶Ô±ÈÎÄ¼ş");
+                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "å¼€å§‹è§£ææœ¬åœ°å¯¹æ¯”æ–‡ä»¶");
 
-                // Òì²½Ğ­³Ì½âÎö±¾µØAB°ü¶Ô±ÈÎÄ¼ş
+                // å¼‚æ­¥åç¨‹è§£ææœ¬åœ°ABåŒ…å¯¹æ¯”æ–‡ä»¶
                 AnalysisLocalABCompareFileInfoAsync((isAnalysisLocalOver) =>
                 {
                     if (isAnalysisLocalOver)
                     {
                         long downLoadSize = 0;
-                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "¿ªÊ¼¶Ô±ÈAB°üÎÄ¼ş");
+                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "å¼€å§‹å¯¹æ¯”ABåŒ…æ–‡ä»¶");
                         foreach (string abName in remoteABDic.Keys)
                         {
-                            // Èç¹û±¾µØ²»´æÔÚAB°ü£¬Ôò¼ÓÈë´ıÏÂÔØÁĞ±íÖĞ
+                            // å¦‚æœæœ¬åœ°ä¸å­˜åœ¨ABåŒ…ï¼Œåˆ™åŠ å…¥å¾…ä¸‹è½½åˆ—è¡¨ä¸­
                             if (!localABDic.ContainsKey(abName))
                             {
                                 downLoadABList.Add(abName);
@@ -109,22 +110,22 @@ public class ABUpdateMgr : MonoBehaviour
                             }
                             else
                             {
-                                // ´æÔÚ£¬ÔòÅĞ¶ÏÁ½¸öAB°üµÄMD5ÂëÊÇ·ñÒ»Ñù£¬²»Ò»ÑùÔò´ú±íÊÇĞÂ°ü
+                                // å­˜åœ¨ï¼Œåˆ™åˆ¤æ–­ä¸¤ä¸ªABåŒ…çš„MD5ç æ˜¯å¦ä¸€æ ·ï¼Œä¸ä¸€æ ·åˆ™ä»£è¡¨æ˜¯æ–°åŒ…
                                 if (!localABDic[abName].Equals(remoteABDic[abName]))
                                 {
-                                    // ¼ÓÈë´ıÏÂÔØÁĞ±í
+                                    // åŠ å…¥å¾…ä¸‹è½½åˆ—è¡¨
                                     downLoadABList.Add(abName);
                                     downLoadSize += remoteABDic[abName].size;
                                 }
-                                // ¼ì²âÍê´ıÏÂÔØ°üºó ´Ó±¾µØ×ÖµäÖĞÒÆ³ı ×îºó×ÖµäÖĞÊ£ÏÂµÄ°üÔòÎªÀ¬»ø
+                                // æ£€æµ‹å®Œå¾…ä¸‹è½½åŒ…å ä»æœ¬åœ°å­—å…¸ä¸­ç§»é™¤ æœ€åå­—å…¸ä¸­å‰©ä¸‹çš„åŒ…åˆ™ä¸ºåƒåœ¾
                                 localABDic.Remove(abName);
                             }
                         }
-                        // °ÑĞèÒª¸üĞÂµÄAB°üÎÄ¼ş´óĞ¡Í¨¹ıÊÂ¼şÖĞĞÄ´«³öÍâ²¿
+                        // æŠŠéœ€è¦æ›´æ–°çš„ABåŒ…æ–‡ä»¶å¤§å°é€šè¿‡äº‹ä»¶ä¸­å¿ƒä¼ å‡ºå¤–éƒ¨
                         EventCenter.Instance.EventTrigger<long>("DownLoadABFileSize", downLoadSize);
-                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "¶Ô±ÈAB°üÎÄ¼şÍê³É");
-                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "É¾³ıÎŞÓÃAB°ü£¬ÊÍ·Å¿Õ¼ä");
-                        // É¾³ı¶àÓàµÄAB°üÎÄ¼ş£¬ÊÍ·ÅÄÚ´æ¿Õ¼ä
+                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "å¯¹æ¯”ABåŒ…æ–‡ä»¶å®Œæˆ");
+                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "åˆ é™¤æ— ç”¨ABåŒ…ï¼Œé‡Šæ”¾ç©ºé—´");
+                        // åˆ é™¤å¤šä½™çš„ABåŒ…æ–‡ä»¶ï¼Œé‡Šæ”¾å†…å­˜ç©ºé—´
                         foreach (string abName in localABDic.Keys)
                         {
                             if (File.Exists(localPath + abName))
@@ -132,55 +133,55 @@ public class ABUpdateMgr : MonoBehaviour
                                 File.Delete(localPath + abName);
                             }
                         }
-                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "¿ªÊ¼ÏÂÔØ¸üĞÂAB°üÎÄ¼ş");
-                        // ÏÂÔØ¸üĞÂAB°üÎÄ¼ş
+                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "å¼€å§‹ä¸‹è½½æ›´æ–°ABåŒ…æ–‡ä»¶");
+                        // ä¸‹è½½æ›´æ–°ABåŒ…æ–‡ä»¶
                         DownLoadABFile((isDownLoadAbFileOver) =>
                         {
                             if (isDownLoadAbFileOver)
                             {
-                                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "¸üĞÂ±¾µØAB°ü¶Ô±ÈÎÄ¼ş");
+                                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "æ›´æ–°æœ¬åœ°ABåŒ…å¯¹æ¯”æ–‡ä»¶");
 
-                                // °Ñ×îĞÂAB°ü¶Ô±ÈÎÄ¼şĞ´Èë±¾µØ
+                                // æŠŠæœ€æ–°ABåŒ…å¯¹æ¯”æ–‡ä»¶å†™å…¥æœ¬åœ°
                                 File.WriteAllText(localPath + "ABCompareInfo.txt", remoteABCompareInfo);
                             }
-                            // Í¨ÖªÍâ²¿AB°ü¸üĞÂ×´Ì¬
+                            // é€šçŸ¥å¤–éƒ¨ABåŒ…æ›´æ–°çŠ¶æ€
                             EventCenter.Instance.EventTrigger<bool>("UpdateStatus", isDownLoadAbFileOver);
                         });
                     }
                     else
                     {
-                        // ½âÎö±¾µØAB°üÎÄ¼şÊ§°Ü
+                        // è§£ææœ¬åœ°ABåŒ…æ–‡ä»¶å¤±è´¥
                         EventCenter.Instance.EventTrigger<bool>("UpdateStatus", false);
                     }
                 });
             }
             else
             {
-                // Ô¶¶ËAB°ü¶Ô±ÈÎÄ¼şÏÂÔØÊ§°Ü
+                // è¿œç«¯ABåŒ…å¯¹æ¯”æ–‡ä»¶ä¸‹è½½å¤±è´¥
                 EventCenter.Instance.EventTrigger<bool>("UpdateStatus", false);
             }
         });
     }
 
     /// <summary>
-    /// ÏÂÔØ¸üĞÂAB°üÎÄ¼ş
+    /// ä¸‹è½½æ›´æ–°ABåŒ…æ–‡ä»¶
     /// </summary>
-    /// <param name="callback">»Øµ÷º¯Êı</param>
+    /// <param name="callback">å›è°ƒå‡½æ•°</param>
     private async void DownLoadABFile(UnityAction<bool> callback)
     {
-        // ÎÄ¼ş´æ·ÅÂ·¾¶
+        // æ–‡ä»¶å­˜æ”¾è·¯å¾„
         string path = Application.persistentDataPath + "/AB/";
-        // ·şÎñ¶ËIPµØÖ·
+        // æœåŠ¡ç«¯IPåœ°å€
         string serverIP = SERVER_IP + TargetPlatform + "/";
-        // ´æ´¢ÏÂÔØ³É¹¦µÄAB°üÁĞ±í
+        // å­˜å‚¨ä¸‹è½½æˆåŠŸçš„ABåŒ…åˆ—è¡¨
         List<string> tempList = new List<string>();
 
-        // ¿ªÊ¼ÏÂÔØ¸üĞÂAB°üÎÄ¼ş
+        // å¼€å§‹ä¸‹è½½æ›´æ–°ABåŒ…æ–‡ä»¶
         foreach (string abName in downLoadABList)
         {
             await FtpManager.Instance.DownLoadFileAsync(abName, path + abName, serverIP, USER_NAME, PASSWORD, (result) =>
             {
-                // ÏÂÔØ³É¹¦ ²Å¼ÓÈë³É¹¦ÁĞ±íÖĞ
+                // ä¸‹è½½æˆåŠŸ æ‰åŠ å…¥æˆåŠŸåˆ—è¡¨ä¸­
                 if (result)
                 {
                     tempList.Add(abName);
@@ -188,7 +189,7 @@ public class ABUpdateMgr : MonoBehaviour
             });
         }
 
-        // Ñ­»·É¾³ıÒÑ¾­ÏÂÔØµÄAB°üÎÄ¼ş
+        // å¾ªç¯åˆ é™¤å·²ç»ä¸‹è½½çš„ABåŒ…æ–‡ä»¶
         foreach (string abName in tempList)
         {
             downLoadABList.Remove(abName);
@@ -198,7 +199,7 @@ public class ABUpdateMgr : MonoBehaviour
     }
 
     /// <summary>
-    /// ½âÎöÔ¶¶ËAB°ü¶Ô±ÈÎÄ¼ş£¬»ñÈ¡Ô¶¶ËAB°üĞÅÏ¢
+    /// è§£æè¿œç«¯ABåŒ…å¯¹æ¯”æ–‡ä»¶ï¼Œè·å–è¿œç«¯ABåŒ…ä¿¡æ¯
     /// </summary>
     private void AnalysisABCompareFileInfo(string compareInfo, Dictionary<string, ABInfo> abInfoDic)
     {
@@ -207,15 +208,15 @@ public class ABUpdateMgr : MonoBehaviour
         foreach (string str in strs)
         {
             infos = str.Split(" ");
-            // °ÑÔ¶¶ËAB°üĞÅÏ¢´æ´¢µ½×ÖµäÖĞ
+            // æŠŠè¿œç«¯ABåŒ…ä¿¡æ¯å­˜å‚¨åˆ°å­—å…¸ä¸­
             abInfoDic.Add(infos[0], new ABInfo(infos[0], infos[1], infos[2]));
         }
     }
 
     /// <summary>
-    /// Òì²½Ğ­³Ì½âÎö±¾µØAB°ü¶Ô±ÈÎÄ¼ş
+    /// å¼‚æ­¥åç¨‹è§£ææœ¬åœ°ABåŒ…å¯¹æ¯”æ–‡ä»¶
     /// </summary>
-    /// <param name="callback">½âÎöÍê³É»Øµ÷º¯Êı</param>
+    /// <param name="callback">è§£æå®Œæˆå›è°ƒå‡½æ•°</param>
     private void AnalysisLocalABCompareFileInfoAsync(UnityAction<bool> callback)
     {
         string path =
@@ -245,61 +246,61 @@ public class ABUpdateMgr : MonoBehaviour
     }
 
     /// <summary>
-    /// Òì²½½âÎö±¾µØAB°ü¶Ô±ÈÎÄ¼şµÄĞ­³Ì
+    /// å¼‚æ­¥è§£ææœ¬åœ°ABåŒ…å¯¹æ¯”æ–‡ä»¶çš„åç¨‹
     /// </summary>
-    /// <param name="callback">»Øµ÷º¯Êı</param>
+    /// <param name="callback">å›è°ƒå‡½æ•°</param>
     /// <returns></returns>
     private IEnumerator AnalysisLocalABCompareFileInfoAsync(string filePath, UnityAction<bool> callback)
     {
-        // ¼ÓÔØ±¾µØÎÄ¼ş
+        // åŠ è½½æœ¬åœ°æ–‡ä»¶
         UnityWebRequest req = UnityWebRequest.Get(filePath);
         yield return req.SendWebRequest();
 
         if (req.result == UnityWebRequest.Result.Success)
         {
-            // ½âÎö±¾µØAB°ü¶Ô±ÈÎÄ¼ş
+            // è§£ææœ¬åœ°ABåŒ…å¯¹æ¯”æ–‡ä»¶
             AnalysisABCompareFileInfo(req.downloadHandler.text, localABDic);
-            // ½âÎö³É¹¦
+            // è§£ææˆåŠŸ
             callback?.Invoke(true);
-            EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "½âÎö±¾µØ¶Ô±ÈÎÄ¼ş³É¹¦");
+            EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "è§£ææœ¬åœ°å¯¹æ¯”æ–‡ä»¶æˆåŠŸ");
         }
         else
         {
-            // ½âÎöÊ§°Ü
+            // è§£æå¤±è´¥
             callback?.Invoke(false);
-            EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "½âÎö±¾µØ¶Ô±ÈÎÄ¼şÊ§°Ü");
+            EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "è§£ææœ¬åœ°å¯¹æ¯”æ–‡ä»¶å¤±è´¥");
         }
     }
 
     /// <summary>
-    /// ´Ó·şÎñ¶ËÏÂÔØAB°ü¶Ô±ÈÎÄ¼ş
+    /// ä»æœåŠ¡ç«¯ä¸‹è½½ABåŒ…å¯¹æ¯”æ–‡ä»¶
     /// </summary>
-    /// <param name="callback">ÏÂÔØÍê³É»Øµ÷º¯Êı</param>
+    /// <param name="callback">ä¸‹è½½å®Œæˆå›è°ƒå‡½æ•°</param>
     public async void DownLoadABCompareFile(UnityAction<bool> callback)
     {
-        // ÅĞ¶Ï±¾µØÎÄ¼ş¼ĞÊÇ·ñ´æÔÚ£¬²»´æÔÚÔò´´½¨
+        // åˆ¤æ–­æœ¬åœ°æ–‡ä»¶å¤¹æ˜¯å¦å­˜åœ¨ï¼Œä¸å­˜åœ¨åˆ™åˆ›å»º
         if (!Directory.Exists(localPath))
         {
             Directory.CreateDirectory(localPath);
         }
         print(Application.persistentDataPath);
 
-        // ÎÄ¼ş´æ·ÅÂ·¾¶
+        // æ–‡ä»¶å­˜æ”¾è·¯å¾„
         string path = localPath + "ABCompareInfo_TMP.txt";
-        // ·şÎñ¶ËIPµØÖ·
+        // æœåŠ¡ç«¯IPåœ°å€
         string serverIP = SERVER_IP + TargetPlatform + "/";
 
         await FtpManager.Instance.DownLoadFileAsync("ABCompareInfo.txt", path, serverIP, USER_NAME, PASSWORD, callback);
     }
 
     /// <summary>
-    /// AB°üĞÅÏ¢Àà£¬ÓÃÓÚ¼ì²éAB°üÊÇ·ñĞèÒª¸üĞÂ
+    /// ABåŒ…ä¿¡æ¯ç±»ï¼Œç”¨äºæ£€æŸ¥ABåŒ…æ˜¯å¦éœ€è¦æ›´æ–°
     /// </summary>
     public class ABInfo
     {
-        public string abName; // AB°üÃû
-        public long size; // AB°ü´óĞ¡
-        public string md5; // AB°üµÄMD5Âë
+        public string abName; // ABåŒ…å
+        public long size; // ABåŒ…å¤§å°
+        public string md5; // ABåŒ…çš„MD5ç 
 
         public ABInfo(string abName, string size, string md5)
         {
@@ -309,7 +310,7 @@ public class ABUpdateMgr : MonoBehaviour
         }
 
         /// <summary>
-        /// ÖØĞ´Equals·½·¨£¬¶Ô±ÈAB°üµÄmd5Âë
+        /// é‡å†™Equalsæ–¹æ³•ï¼Œå¯¹æ¯”ABåŒ…çš„md5ç 
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>

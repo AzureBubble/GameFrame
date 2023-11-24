@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameFramework.Machine
+namespace GameFramework.StateMachine
 {
     /// <summary>
     /// 状态机基类

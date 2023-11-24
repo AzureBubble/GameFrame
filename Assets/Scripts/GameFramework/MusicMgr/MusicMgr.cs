@@ -1,10 +1,10 @@
-using SGM.ObjectPoolManager;
-using SGM.ResourcesManager;
+using GameFramework.ObjectPoolManager;
+using GameFramework.PackageMgr.ResourcesManager;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SGM.MusicManager
+namespace GameFramework.MusicManager
 {
     /// <summary>
     /// 音乐音效管理器

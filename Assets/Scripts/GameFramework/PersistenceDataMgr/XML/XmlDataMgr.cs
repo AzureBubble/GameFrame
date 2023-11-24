@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace SGM.XMLManager
+namespace GameFramework.PersistenceDataMgr
 {
     public class XmlDataMgr : Singleton<XmlDataMgr>
     {

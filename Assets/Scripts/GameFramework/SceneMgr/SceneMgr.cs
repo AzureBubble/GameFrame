@@ -1,10 +1,9 @@
-using SGM.MEventCenter;
-using SGM.MonoManager;
+using GameFramework.GFEventCenter;
+using GameFramework.MonoManager;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace SGM.MSceneManager
+namespace GameFramework.GFSceneManager
 {
     /// <summary>
     /// 场景切换管理者
@@ -25,7 +24,7 @@ namespace SGM.MSceneManager
             // 场景切换前事件监听
             EventCenter.Instance.EventTrigger(BEFORE_SCENE_LOAD);
 
-            SceneManager.LoadScene(sceneName);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
 
             // 场景切换后事件监听
             EventCenter.Instance.EventTrigger(AFTER_SCENE_LOADED);
@@ -51,7 +50,7 @@ namespace SGM.MSceneManager
             // 场景切换前事件监听
             EventCenter.Instance.EventTrigger(BEFORE_SCENE_LOAD);
 
-            AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName);
+            AsyncOperation ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
             // 异步加载进度条
             while (!ao.isDone)
             {

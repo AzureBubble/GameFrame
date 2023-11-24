@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace SGM.JsonManager
+namespace GameFramework.PersistenceDataMgr
 {
     public enum JsonType
     {

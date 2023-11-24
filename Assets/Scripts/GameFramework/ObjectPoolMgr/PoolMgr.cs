@@ -1,10 +1,10 @@
-using SGM.ResourcesManager;
+using GameFramework.PackageMgr.ResourcesManager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SGM.ObjectPoolManager
+namespace GameFramework.ObjectPoolManager
 {
     /// <summary>
     /// 缓存池容器对象

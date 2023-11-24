@@ -3,7 +3,7 @@ using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SGM.MonoManager
+namespace GameFramework.MonoManager
 {
     /// <summary>
     /// Mono 管理器

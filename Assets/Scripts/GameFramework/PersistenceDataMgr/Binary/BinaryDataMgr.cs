@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using UnityEngine;
 
-namespace SGM.BinaryDataManager
+namespace GameFramework.PersistenceDataMgr
 {
     /// <summary>
     /// 数据加密类型

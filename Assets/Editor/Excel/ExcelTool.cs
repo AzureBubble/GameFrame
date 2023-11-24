@@ -6,7 +6,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace SGM.MexcelTool
+namespace GameFramework.MexcelTool
 {
     /// <summary>
     /// Excel 工具类

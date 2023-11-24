@@ -3,7 +3,7 @@ using System.IO;
 using UnityEngine;
 using XLua;
 
-namespace GameFramework.Lua
+namespace GameFramework.LuaMgr
 {
     /// <summary>
     /// Lua 脚本管理器

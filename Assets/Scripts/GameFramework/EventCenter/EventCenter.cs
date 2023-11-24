@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
-namespace SGM.MEventCenter
+namespace GameFramework.GFEventCenter
 {
     /// <summary>
     /// 单个事件接口

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Reflection;
 using UnityEngine;
 
-namespace SGM.PlayerPrefsManager
+namespace GameFramework.PersistenceDataMgr
 {
     public class PlayerPrefsDataMgr : Singleton<PlayerPrefsDataMgr>
     {

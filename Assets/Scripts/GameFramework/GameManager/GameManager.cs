@@ -1,4 +1,4 @@
-using SGM.MUIManager;
+using GameFramework.GFUIManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

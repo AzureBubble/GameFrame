@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SGM.MonoManager
+namespace GameFramework.MonoManager
 {
     public class MonoController : MonoBehaviour
     {

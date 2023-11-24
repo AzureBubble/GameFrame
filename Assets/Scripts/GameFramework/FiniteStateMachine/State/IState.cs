@@ -1,4 +1,4 @@
-namespace GameFramework.Machine
+namespace GameFramework.StateMachine
 {
     /// <summary>
     /// 状态接口

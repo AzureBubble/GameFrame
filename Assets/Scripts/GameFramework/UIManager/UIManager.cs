@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using SGM.ResourcesManager;
+using GameFramework.PackageMgr.ResourcesManager;
 
-namespace SGM.MUIManager
+namespace GameFramework.GFUIManager
 {
     public enum E_UI_Panel_Layer
     {

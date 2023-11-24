@@ -1,9 +1,9 @@
-using SGM.MonoManager;
+using GameFramework.MonoManager;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SGM.ResourcesManager
+namespace GameFramework.PackageMgr.ResourcesManager
 {
     public class ResourcesMgr : Singleton<ResourcesMgr>
     {

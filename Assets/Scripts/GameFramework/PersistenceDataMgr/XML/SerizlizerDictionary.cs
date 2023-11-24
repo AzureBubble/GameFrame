@@ -3,7 +3,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace SGM.XMLManager
+namespace GameFramework.PersistenceDataMgr
 {
     /// <summary>
     /// 重写XML可序列化的Dictionary

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SGM.MInputManager
+namespace GameFramework.GFInputManager
 {
     /// <summary>
     /// 按键的三种类型状态
