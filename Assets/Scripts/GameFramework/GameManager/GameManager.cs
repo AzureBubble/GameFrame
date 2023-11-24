@@ -1,4 +1,5 @@
 using GameFramework.GFUIManager;
+using GameFramework.PersistenceDataMgr;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

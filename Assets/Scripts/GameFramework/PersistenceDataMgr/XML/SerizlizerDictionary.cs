@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
@@ -10,6 +11,7 @@ namespace GameFramework.PersistenceDataMgr
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
+    [Obsolete("建议使用Binary进行数据持久化")]
     public class SerizlizerDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
     {
         public XmlSchema GetSchema()

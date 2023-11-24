@@ -5,13 +5,15 @@ using UnityEngine;
 
 namespace GameFramework.PersistenceDataMgr
 {
+    [Obsolete("建议使用Binary进行数据持久化")]
     public class XmlDataMgr : Singleton<XmlDataMgr>
     {
         /// <summary>
-        /// 存储数据
+        /// 存储数据 建议使用Binary进行数据持久化
         /// </summary>
         /// <param name="data">数据</param>
         /// <param name="fileName">文件名</param>
+        [Obsolete("建议使用Binary进行数据持久化")]
         public void SaveData(object data, string fileName)
         {
             // 存储路径
@@ -29,11 +31,12 @@ namespace GameFramework.PersistenceDataMgr
         }
 
         /// <summary>
-        /// 读取数据
+        /// 读取数据 建议使用Binary进行数据持久化
         /// </summary>
         /// <param name="type">数据类型</param>
         /// <param name="fileName">文件名</param>
         /// <returns></returns>
+        [Obsolete("建议使用Binary进行数据持久化")]
         public object LoadData(Type type, string fileName)
         {
             // 判断文件是否存在
