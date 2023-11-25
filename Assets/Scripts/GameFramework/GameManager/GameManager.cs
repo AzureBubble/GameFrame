@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance => instance;
 
+    private static bool isInit = false; // 是否已经初始化过
+
     // 新输入系统的键盘映射
     public PlayerInputAction playerInputAction;
 
@@ -21,13 +23,23 @@ public class GameManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void InitalizeGameManager()
     {
+        // 已经初始化过 则不再进行初始化
+        if (!isInit)
+        {
+            return;
+        }
+
         GameObject obj = new GameObject("GameManager");
         instance = obj.AddComponent<GameManager>();
         DontDestroyOnLoad(obj);
+
+        // 游戏数据 管理器等进行初始化
         //UIManager.Instance.ShowPanel<LoginPanel>();
         //MusicMgr.Instance.PlayGameMusic("BGM");
         //MusicMgr.Instance.PlayAmbientMusic("a");
         //InputManager.Instance.PushStack();
+
+        isInit = true;
     }
 
     private void Awake()
