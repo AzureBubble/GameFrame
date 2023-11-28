@@ -53,26 +53,6 @@ namespace GameFramework.PersistenceDataMgr
             }
 
             IsInit = true;
-
-            //if (!Directory.Exists(DATA_BINARY_PATH))
-            //{
-            //    return;
-            //}
-
-            //string[] strs = Directory.GetFiles(DATA_BINARY_PATH);
-            //foreach (string str in strs)
-            //{
-            //    // 不处理.meta文件
-            //    if (str.Substring(str.LastIndexOf(".")) == ".meta")
-            //    {
-            //        continue;
-            //    }
-            //    string fileStr = str.Substring(str.LastIndexOf("/") + 1);
-            //    string fileName = fileStr.Split(".")[0];
-            //    string containerName = fileName + "Container";
-            //    LoadTable<fileName, containerName>();
-            //    Debug.Log(fileName);
-            //}
         }
 
         /// <summary>

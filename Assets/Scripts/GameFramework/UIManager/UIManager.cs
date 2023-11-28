@@ -15,8 +15,8 @@ namespace GameFramework.GFUIManager
 
     /// <summary>
     /// UI 面板容器管理者
-    /// 负责 游戏里所有UI面板的管理
-    /// 包括显隐
+    /// 负责 游戏里所有UI面板的管理 包括显隐
+    /// 享元模式
     /// </summary>
     public class UIManager : Singleton<UIManager>
     {

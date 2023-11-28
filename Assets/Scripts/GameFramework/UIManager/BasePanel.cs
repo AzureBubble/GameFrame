@@ -58,7 +58,7 @@ namespace GameFramework.GFUIManager
         /// <summary>
         /// 面板初始化函数
         /// </summary>
-        public abstract void InitalizePanel();
+        protected abstract void InitalizePanel();
 
         /// <summary>
         /// 根据控件类型，找到所有相关联的控件，存入容器中统一管理
