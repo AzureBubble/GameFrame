@@ -12,10 +12,10 @@ namespace GameFramework.GFInputManager
         protected string keyName;
         protected UnityAction<float> action;
 
-        public HotKeyCommand(E_HotKey_Command_Type type, UnityAction<float> action)
+        public HotKeyCommand(E_HotKey_Command_Type type, string keyName, UnityAction<float> action)
         {
             this.type = type;
-            //this.keyName = keyName;
+            this.keyName = keyName;
             this.action = action;
         }
 
@@ -23,24 +23,11 @@ namespace GameFramework.GFInputManager
         {
             switch (type)
             {
-                case E_HotKey_Command_Type.HorizontalAxis:
-                    keyName = "Horizontal";
+                case E_HotKey_Command_Type.Axis:
                     action?.Invoke(Input.GetAxis(keyName));
                     break;
 
-                case E_HotKey_Command_Type.VerticalAxis:
-                    keyName = "Vertical";
-                    action?.Invoke(Input.GetAxis(keyName));
-                    break;
-
-                case E_HotKey_Command_Type.HorizontalAxisRaw:
-                    keyName = "Horizontal";
-                    action?.Invoke(Input.GetAxisRaw(keyName));
-
-                    break;
-
-                case E_HotKey_Command_Type.VerticalAxisRaw:
-                    keyName = "Vertical";
+                case E_HotKey_Command_Type.AxisRaw:
                     action?.Invoke(Input.GetAxisRaw(keyName));
                     break;
             }
