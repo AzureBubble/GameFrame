@@ -1,5 +1,6 @@
 /// <summary>
 /// 按键的三种状态枚举
+/// 热键输入状态 Axis AxisRaw
 /// </summary>
 public enum E_KeyCode_Command_Type
 {
@@ -17,4 +18,14 @@ public enum E_KeyCode_Command_Type
     /// 按键抬起
     /// </summary>
     Up,
+
+    /// <summary>
+    /// 获取 Axis -1 ~ 1
+    /// </summary>
+    Axis,
+
+    /// <summary>
+    /// 获取 -1 0 1
+    /// </summary>
+    AxisRaw,
 }

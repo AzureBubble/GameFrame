@@ -8,11 +8,11 @@ namespace GameFramework.GFInputManager
     /// </summary>
     public class HotKeyCommand : ICommand
     {
-        protected E_HotKey_Command_Type type;
+        protected E_KeyCode_Command_Type type;
         protected string keyName;
         protected UnityAction<float> action;
 
-        public HotKeyCommand(E_HotKey_Command_Type type, string keyName, UnityAction<float> action)
+        public HotKeyCommand(E_KeyCode_Command_Type type, string keyName, UnityAction<float> action)
         {
             this.type = type;
             this.keyName = keyName;
@@ -23,11 +23,11 @@ namespace GameFramework.GFInputManager
         {
             switch (type)
             {
-                case E_HotKey_Command_Type.Axis:
+                case E_KeyCode_Command_Type.Axis:
                     action?.Invoke(Input.GetAxis(keyName));
                     break;
 
-                case E_HotKey_Command_Type.AxisRaw:
+                case E_KeyCode_Command_Type.AxisRaw:
                     action?.Invoke(Input.GetAxisRaw(keyName));
                     break;
             }
