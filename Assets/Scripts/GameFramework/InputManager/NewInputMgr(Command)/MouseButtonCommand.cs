@@ -1,46 +1,49 @@
 using UnityEngine.Events;
 using UnityEngine;
 
-/// <summary>
-/// 鼠标按键命令类
-/// </summary>
-public class MouseButtonCommand : ICommand
+namespace GameFramework.GFInputManager
 {
-    protected E_KeyCode_Command_Type type; // 按键状态
-    protected int mouseButton; // 某个按键
-    protected UnityAction action; // 按下触发事件
-
-    public MouseButtonCommand(E_KeyCode_Command_Type type, int mouseButton, UnityAction action)
+    /// <summary>
+    /// 鼠标按键命令类
+    /// </summary>
+    public class MouseButtonCommand : ICommand
     {
-        this.type = type;
-        this.mouseButton = mouseButton;
-        this.action = action;
-    }
+        protected E_KeyCode_Command_Type type; // 按键状态
+        protected int mouseButton; // 某个按键
+        protected UnityAction action; // 按下触发事件
 
-    public virtual void Execute()
-    {
-        switch (type)
+        public MouseButtonCommand(E_KeyCode_Command_Type type, int mouseButton, UnityAction action)
         {
-            case E_KeyCode_Command_Type.Down:
-                if (Input.GetMouseButtonDown(mouseButton))
-                {
-                    action?.Invoke();
-                }
-                break;
+            this.type = type;
+            this.mouseButton = mouseButton;
+            this.action = action;
+        }
 
-            case E_KeyCode_Command_Type.Stay:
-                if (Input.GetMouseButton(mouseButton))
-                {
-                    action?.Invoke();
-                }
-                break;
+        public virtual void Execute()
+        {
+            switch (type)
+            {
+                case E_KeyCode_Command_Type.Down:
+                    if (Input.GetMouseButtonDown(mouseButton))
+                    {
+                        action?.Invoke();
+                    }
+                    break;
 
-            case E_KeyCode_Command_Type.Up:
-                if (Input.GetMouseButtonUp(mouseButton))
-                {
-                    action?.Invoke();
-                }
-                break;
+                case E_KeyCode_Command_Type.Stay:
+                    if (Input.GetMouseButton(mouseButton))
+                    {
+                        action?.Invoke();
+                    }
+                    break;
+
+                case E_KeyCode_Command_Type.Up:
+                    if (Input.GetMouseButtonUp(mouseButton))
+                    {
+                        action?.Invoke();
+                    }
+                    break;
+            }
         }
     }
 }

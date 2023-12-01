@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -29,6 +30,7 @@ namespace GameFramework.GFInputManager
     /// 按键管理
     /// 负责按键的注册和回调函数存储
     /// </summary>
+    [Obsolete("建议使用命令模式的InputManager")]
     public class InputController
     {
         // 存储按键按下回调函数字典

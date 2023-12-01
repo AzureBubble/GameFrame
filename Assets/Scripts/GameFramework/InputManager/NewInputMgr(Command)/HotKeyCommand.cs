@@ -1,46 +1,49 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Unity热键监测输入类
-/// </summary>
-public class HotKeyCommand : ICommand
+namespace GameFramework.GFInputManager
 {
-    protected E_HotKey_Command_Type type;
-    protected string keyName;
-    protected UnityAction<float> action;
-
-    public HotKeyCommand(E_HotKey_Command_Type type, UnityAction<float> action)
+    /// <summary>
+    /// Unity热键监测输入类
+    /// </summary>
+    public class HotKeyCommand : ICommand
     {
-        this.type = type;
-        //this.keyName = keyName;
-        this.action = action;
-    }
+        protected E_HotKey_Command_Type type;
+        protected string keyName;
+        protected UnityAction<float> action;
 
-    public void Execute()
-    {
-        switch (type)
+        public HotKeyCommand(E_HotKey_Command_Type type, UnityAction<float> action)
         {
-            case E_HotKey_Command_Type.HorizontalAxis:
-                keyName = "Horizontal";
-                action?.Invoke(Input.GetAxis(keyName));
-                break;
+            this.type = type;
+            //this.keyName = keyName;
+            this.action = action;
+        }
 
-            case E_HotKey_Command_Type.VerticalAxis:
-                keyName = "Vertical";
-                action?.Invoke(Input.GetAxis(keyName));
-                break;
+        public void Execute()
+        {
+            switch (type)
+            {
+                case E_HotKey_Command_Type.HorizontalAxis:
+                    keyName = "Horizontal";
+                    action?.Invoke(Input.GetAxis(keyName));
+                    break;
 
-            case E_HotKey_Command_Type.HorizontalAxisRaw:
-                keyName = "Horizontal";
-                action?.Invoke(Input.GetAxisRaw(keyName));
+                case E_HotKey_Command_Type.VerticalAxis:
+                    keyName = "Vertical";
+                    action?.Invoke(Input.GetAxis(keyName));
+                    break;
 
-                break;
+                case E_HotKey_Command_Type.HorizontalAxisRaw:
+                    keyName = "Horizontal";
+                    action?.Invoke(Input.GetAxisRaw(keyName));
 
-            case E_HotKey_Command_Type.VerticalAxisRaw:
-                keyName = "Vertical";
-                action?.Invoke(Input.GetAxisRaw(keyName));
-                break;
+                    break;
+
+                case E_HotKey_Command_Type.VerticalAxisRaw:
+                    keyName = "Vertical";
+                    action?.Invoke(Input.GetAxisRaw(keyName));
+                    break;
+            }
         }
     }
 }
