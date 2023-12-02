@@ -8,14 +8,14 @@ namespace GameFramework.GFInputManager
     /// </summary>
     public class KeyCodeCommand : ICommand
     {
-        protected E_KeyCode_Command_Type type; // 按键状态 Down/Stay/Up
-        protected KeyCode keyCode; // 某个按键
-        protected UnityAction action; // 按下触发事件
+        private E_KeyCode_Command_Type type; // 按键状态 Down/Stay/Up
+        private KeyCode keyCode; // 某个按键
+        private UnityAction action; // 按下触发事件
 
-        public KeyCodeCommand(E_KeyCode_Command_Type type, KeyCode keyCode, UnityAction action)
+        public KeyCodeCommand(KeyCode keyCode, E_KeyCode_Command_Type type, UnityAction action)
         {
-            this.type = type;
             this.keyCode = keyCode;
+            this.type = type;
             this.action = action;
         }
 
@@ -44,6 +44,71 @@ namespace GameFramework.GFInputManager
                     }
                     break;
             }
+        }
+
+        public bool AddListener(E_KeyCode_Command_Type type, KeyCode keyCode, UnityAction action)
+        {
+            if (this.keyCode == keyCode && this.type == type)
+            {
+                if (this.action == null)
+                {
+                    this.action = action;
+                }
+                else
+                {
+                    this.action += action;
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        public ICommand RemoveListener(E_KeyCode_Command_Type type, KeyCode keyCode, UnityAction action)
+        {
+            if (this.keyCode == keyCode && this.type == type)
+            {
+                if (this.action != null)
+                {
+                    this.action -= action;
+                }
+
+                if (this.action == null)
+                {
+                    return this;
+                }
+            }
+            return null;
+        }
+
+        public bool RebindingKeyCode(KeyCode oldKey, KeyCode newKey)
+        {
+            if (this.keyCode == oldKey)
+            {
+                this.keyCode = newKey;
+                return true;
+            }
+            return false;
+        }
+
+        public bool AddListener(E_KeyCode_Command_Type type, int mouseButton, UnityAction action)
+        {
+            return false;
+        }
+
+        public bool AddListener(E_KeyCode_Command_Type type, string keyName, UnityAction<float> action)
+        {
+            return false;
+        }
+
+        public ICommand RemoveListener(E_KeyCode_Command_Type type, int mouseButton, UnityAction action)
+        {
+            return null;
+        }
+
+        public ICommand RemoveListener(E_KeyCode_Command_Type type, string keyName, UnityAction<float> action)
+        {
+            return null;
         }
     }
 }

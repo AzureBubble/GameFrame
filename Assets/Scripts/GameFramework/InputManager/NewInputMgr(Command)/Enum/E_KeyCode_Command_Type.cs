@@ -20,12 +20,12 @@ public enum E_KeyCode_Command_Type
     Up,
 
     /// <summary>
-    /// 获取 Axis -1 ~ 1
+    /// 获取 Axis 值: -1 ~ 1
     /// </summary>
     Axis,
 
     /// <summary>
-    /// 获取 -1 0 1
+    /// 获取 AxisRaw 值: -1 0 1
     /// </summary>
     AxisRaw,
 }

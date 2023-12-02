@@ -1,5 +1,6 @@
 using UnityEngine.Events;
 using UnityEngine;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace GameFramework.GFInputManager
 {
@@ -8,17 +9,18 @@ namespace GameFramework.GFInputManager
     /// </summary>
     public class MouseButtonCommand : ICommand
     {
-        protected E_KeyCode_Command_Type type; // 按键状态
         /// <summary>
         /// 0->鼠标左键 1->鼠标右键 2->鼠标中键/滚轮
         /// </summary>
-        protected int mouseButton;
-        protected UnityAction action; // 按下触发事件
+        private int mouseButton;
 
-        public MouseButtonCommand(E_KeyCode_Command_Type type, int mouseButton, UnityAction action)
+        private E_KeyCode_Command_Type type; // 按键状态
+        private UnityAction action; // 按下触发事件
+
+        public MouseButtonCommand(int mouseButton, E_KeyCode_Command_Type type, UnityAction action)
         {
-            this.type = type;
             this.mouseButton = mouseButton;
+            this.type = type;
             this.action = action;
         }
 
@@ -47,6 +49,67 @@ namespace GameFramework.GFInputManager
                     }
                     break;
             }
+        }
+
+        public bool AddListener(E_KeyCode_Command_Type type, int mouseButton, UnityAction action)
+        {
+            if (this.mouseButton == mouseButton && this.type == type)
+            {
+                if (this.action == null)
+                {
+                    this.action = action;
+                }
+                else
+                {
+                    this.action += action;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public ICommand RemoveListener(E_KeyCode_Command_Type type, int mouseButton, UnityAction action)
+        {
+            if (this.mouseButton == mouseButton && this.type == type)
+            {
+                if (this.action != null)
+                {
+                    this.action -= action;
+                }
+
+                if (this.action == null)
+                {
+                    return this;
+                }
+            }
+            return null;
+        }
+
+        public bool RebindingKeyCode(KeyCode oldKey, KeyCode newKey)
+        {
+            return false;
+        }
+
+        public bool AddListener(E_KeyCode_Command_Type type, KeyCode keyCode, UnityAction action)
+        {
+            return false;
+        }
+
+        public bool AddListener(E_KeyCode_Command_Type type, string keyName, UnityAction<float> action)
+        {
+            return false;
+        }
+
+        public ICommand RemoveListener(E_KeyCode_Command_Type type, KeyCode keyCode, UnityAction action)
+        {
+            return null;
+        }
+
+        public ICommand RemoveListener(E_KeyCode_Command_Type type, string keyName, UnityAction<float> action)
+        {
+            return null;
         }
     }
 }
