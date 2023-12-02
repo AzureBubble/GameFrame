@@ -8,7 +8,7 @@ namespace GameFramework.GFInputManager
     /// </summary>
     public class KeyCodeCommand : ICommand
     {
-        protected E_KeyCode_Command_Type type; // 按键状态
+        protected E_KeyCode_Command_Type type; // 按键状态 Down/Stay/Up
         protected KeyCode keyCode; // 某个按键
         protected UnityAction action; // 按下触发事件
 

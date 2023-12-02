@@ -8,9 +8,13 @@ namespace GameFramework.GFInputManager
     /// </summary>
     public class HotKeyCommand : ICommand
     {
-        protected E_KeyCode_Command_Type type;
+        protected E_KeyCode_Command_Type type; // 热键输入类型：Axis/AxisRaw
+        /// <summary>
+        /// 热键名字
+        /// Horizontal->左右箭头/AD键 Vertical->上下箭头/WS键 Mouse X/Y->鼠标水平/垂直方向
+        /// </summary>
         protected string keyName;
-        protected UnityAction<float> action;
+        protected UnityAction<float> action; // 热键输入的回调函数
 
         public HotKeyCommand(E_KeyCode_Command_Type type, string keyName, UnityAction<float> action)
         {

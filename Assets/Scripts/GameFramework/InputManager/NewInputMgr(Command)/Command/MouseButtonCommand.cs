@@ -9,7 +9,10 @@ namespace GameFramework.GFInputManager
     public class MouseButtonCommand : ICommand
     {
         protected E_KeyCode_Command_Type type; // 按键状态
-        protected int mouseButton; // 某个按键
+        /// <summary>
+        /// 0->鼠标左键 1->鼠标右键 2->鼠标中键/滚轮
+        /// </summary>
+        protected int mouseButton;
         protected UnityAction action; // 按下触发事件
 
         public MouseButtonCommand(E_KeyCode_Command_Type type, int mouseButton, UnityAction action)
