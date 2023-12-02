@@ -13,14 +13,17 @@ namespace GameFramework.GFInputManager
 
         public InputMgr()
         {
+            // 把 Update 函数注册到 Mono 管理器中运行
             MonoMgr.Instance.AddUpdateListener(Update);
             commands = new List<ICommand>();
         }
 
         private void Update()
         {
+            // 如果不监听输入 则直接返回 不再监听键盘输入
             if (!canInput) return;
 
+            // 循环遍历列表中的命令 并执行命令的 Execute 方法
             foreach (ICommand command in commands)
             {
                 command?.Execute();
@@ -33,6 +36,7 @@ namespace GameFramework.GFInputManager
         /// <param name="command"></param>
         public void RegisterCommand(ICommand command)
         {
+            // 将命令添加到执行列表中
             commands.Add(command);
         }
 
@@ -44,6 +48,7 @@ namespace GameFramework.GFInputManager
         {
             if (commands.Contains(command))
             {
+                // 从执行列表中移除命令
                 commands.Remove(command);
             }
         }
