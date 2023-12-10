@@ -72,6 +72,7 @@ namespace GameFramework.GFExcelTool
         {
             // 获取 ExcelTool 编辑器窗口对象
             ExcelTool window = EditorWindow.GetWindowWithRect<ExcelTool>(new Rect(0, 0, 280, 200));
+            window.autoRepaintOnSceneChange = true;
             // 显示窗口
             window.Show();
         }

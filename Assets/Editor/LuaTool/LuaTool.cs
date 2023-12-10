@@ -19,6 +19,7 @@ namespace GameFramework.GFLuaTool
         public static void OpenLuaToolWindow()
         {
             LuaTool window = EditorWindow.GetWindowWithRect<LuaTool>(new Rect(0, 0, 250, 130));
+            window.autoRepaintOnSceneChange = true;
             window.Show();
         }
 

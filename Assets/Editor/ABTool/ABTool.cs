@@ -18,6 +18,7 @@ public class ABTool : EditorWindow
     private static void OpenABToolWindow()
     {
         ABTool window = EditorWindow.GetWindowWithRect<ABTool>(new Rect(0, 0, 320, 220));
+        window.autoRepaintOnSceneChange = true;
         window.Show();
     }
 
