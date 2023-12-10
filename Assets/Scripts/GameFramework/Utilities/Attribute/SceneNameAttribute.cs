@@ -25,8 +25,13 @@ public class SceneNameDrawer : PropertyDrawer
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        // 如果 BuildSettings 中没有场景 则不继续执行下面的逻辑
-        if (EditorBuildSettings.scenes.Length == 0) return;
+        // 如果 BuildSettings 中没有场景 则提示添加场景
+        if (EditorBuildSettings.scenes.Length == 0)
+        {
+            newSceneIndex = 0;
+            sceneNames = new GUIContent[] { new GUIContent("Check Your Build Settings To Add Scene") };
+            property.stringValue = string.Empty;
+        }
 
         // 场景序号为 -1 则需要进行初始化
         if (newSceneIndex == -1)
@@ -75,11 +80,6 @@ public class SceneNameDrawer : PropertyDrawer
             }
             // 把场景名字构造成 GUIContent 元素 添加到数组中
             sceneNames[i] = new GUIContent(sceneName);
-        }
-
-        if (sceneNames.Length == 0)
-        {
-            sceneNames = new[] { new GUIContent("Check Your Build Settings To Add Scene") };
         }
 
         if (string.IsNullOrEmpty(property.stringValue))
