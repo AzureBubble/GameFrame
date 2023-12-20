@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -35,7 +36,11 @@ namespace GameFramework.GFUIManager
         /// </summary>
         protected virtual void Awake()
         {
-            canvasGroup = this.GetComponent<CanvasGroup>();
+            if (!this.TryGetComponent<CanvasGroup>(out canvasGroup))
+            {
+                canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
+            }
+
             FindChildrenControl<Button>();
             FindChildrenControl<Image>();
             FindChildrenControl<Text>();
