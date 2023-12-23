@@ -7,9 +7,10 @@ using UnityEngine;
 
 public class ABTool : EditorWindow
 {
-    private string serverIP = "ftp://192.168.168.128/"; // 远程服务器地址
-    private string userName = "root"; // 用户名
-    private string password = "root"; // 密码
+    private SerializedObject serializedObject;
+    private SerializedProperty serverIpProperty; // 远程服务器地址
+    private SerializedProperty userNameProperty; // 用户名
+    private SerializedProperty passwordProperty; // 密码
 
     private int nowSelectedIndex = 0;
     private string[] targetStrs = new string[] { "PC", "IOS", "Android" };
@@ -22,18 +23,46 @@ public class ABTool : EditorWindow
         window.Show();
     }
 
+    private void OnFocus()
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        serializedObject?.Dispose();
+        serializedObject = new SerializedObject(ABToolScriptableObject.Instance);
+        // 得到 SO 文件中的对应属性值
+        serverIpProperty = serializedObject.FindProperty("serverIP");
+        userNameProperty = serializedObject.FindProperty("userName");
+        passwordProperty = serializedObject.FindProperty("password");
+    }
+
     private void OnGUI()
     {
+        if (serializedObject == null || !serializedObject.targetObject)
+        {
+            Init();
+        }
+
         GUI.Label(new Rect(10, 10, 100, 25), "平台选择");
         nowSelectedIndex = GUI.Toolbar(new Rect(80, 10, 230, 25), nowSelectedIndex, targetStrs);
 
+        EditorGUI.BeginChangeCheck();
+
         GUI.Label(new Rect(10, 40, 100, 20), "资源服务器IP地址");
-        serverIP = GUI.TextField(new Rect(110, 40, 200, 20), serverIP);
+        serverIpProperty.stringValue = GUI.TextField(new Rect(110, 40, 200, 20), serverIpProperty.stringValue);
 
         GUI.Label(new Rect(10, 70, 50, 20), "用户名");
-        userName = GUI.TextField(new Rect(60, 70, 100, 20), userName);
+        userNameProperty.stringValue = GUI.TextField(new Rect(60, 70, 100, 20), userNameProperty.stringValue);
         GUI.Label(new Rect(170, 70, 50, 20), "密码");
-        password = GUI.TextField(new Rect(210, 70, 100, 20), password);
+        passwordProperty.stringValue = GUI.TextField(new Rect(210, 70, 100, 20), passwordProperty.stringValue);
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            serializedObject.ApplyModifiedProperties();
+            ABToolScriptableObject.Save();
+        }
 
         if (GUI.Button(new Rect(10, 100, 100, 50), "创建对比文件"))
         {
@@ -93,7 +122,7 @@ public class ABTool : EditorWindow
     /// </summary>
     private void UpLoadAllABFile()
     {
-        string serverPath = serverIP + "AB/" + targetStrs[nowSelectedIndex] + "/";
+        string serverPath = serverIpProperty.stringValue + "AB/" + targetStrs[nowSelectedIndex] + "/";
         // 获取文件夹信息
         DirectoryInfo dInfo = Directory.CreateDirectory(Application.dataPath + "/ArtRes/AB/" + targetStrs[nowSelectedIndex] + "/");
         // 获取文件夹中所有的文件信息
@@ -104,7 +133,7 @@ public class ABTool : EditorWindow
         {
             if (file.Name == "ABCompareInfo.txt" || file.Extension == "")
             {
-                FtpManager.Instance.UpLoadFileAsync(file.Name, file.FullName, serverPath, userName, password);
+                FtpManager.Instance.UpLoadFileAsync(file.Name, file.FullName, serverPath, userNameProperty.stringValue, passwordProperty.stringValue);
             }
         }
     }
@@ -163,5 +192,11 @@ public class ABTool : EditorWindow
 
             return sb.ToString();
         }
+    }
+
+    private void OnDisable()
+    {
+        // 窗口关闭时 保存所有的设置到 SO文件中
+        ABToolScriptableObject.Save();
     }
 }
