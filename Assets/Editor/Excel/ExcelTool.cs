@@ -14,10 +14,17 @@ namespace GameFramework.GFExcelTool
     /// </summary>
     public class ExcelTool : EditorWindow
     {
+        private SerializedObject serializedObject;
+        private SerializedProperty excelPathProperty; // Excel文件存放路径
+        private SerializedProperty dataClassPathProperty; // 数据结构类存储路径
+        private SerializedProperty dataContainerPathProperty; // 数据容器类存储路径
+        private SerializedProperty dataBinaryPathProperty; // 二进制数据存储路径
+        private SerializedProperty dataJsonPathProperty; // Json数据存储路径
+
         /// <summary>
         /// Excel文件存放路径
         /// </summary>
-        private static string EXCEL_PATH = Application.dataPath + "/ArtRes/Excel/";
+        //private static string EXCEL_PATH = Application.dataPath + "/ArtRes/Excel/";
 
         /// <summary>
         /// 数据结构类存储路径
@@ -71,21 +78,53 @@ namespace GameFramework.GFExcelTool
         public static void OpenExcelToolWindow()
         {
             // 获取 ExcelTool 编辑器窗口对象
-            ExcelTool window = EditorWindow.GetWindowWithRect<ExcelTool>(new Rect(0, 0, 280, 200));
+            ExcelTool window = EditorWindow.GetWindowWithRect<ExcelTool>(new Rect(0, 0, 280, 160));
             window.autoRepaintOnSceneChange = true;
             // 显示窗口
             window.Show();
         }
 
+        private void OnFocus()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            serializedObject?.Dispose();
+            serializedObject = new SerializedObject(ExcelToolScriptableObject.Instance);
+            excelPathProperty = serializedObject.FindProperty("excelPath");
+            //dataClassPathProperty = serializedObject.FindProperty("dataClassPath");
+            //dataContainerPathProperty = serializedObject.FindProperty("dataContainerPath");
+            //dataBinaryPathProperty = serializedObject.FindProperty("dataBinaryPath");
+            //dataJsonPathProperty = serializedObject.FindProperty("dataJsonPath");
+        }
+
         private void OnGUI()
         {
+            if (serializedObject == null || !serializedObject.targetObject)
+            {
+                Init();
+            }
+
             GUI.Label(new Rect(10, 10, 250, 15), "生成目标文件格式选择");
             nowSelectedIndex = GUI.Toolbar(new Rect(10, 30, 250, 25), nowSelectedIndex, targetStrs);
 
-            GUI.Label(new Rect(10, 60, 250, 15), "默认读表路径 : ArtRes/Excel/");
+            GUI.Label(new Rect(10, 60, 250, 15), "读表路径(末尾要加'/'):" + excelPathProperty.stringValue);
+
+            serializedObject.Update();
+            EditorGUI.BeginChangeCheck();
+
+            excelPathProperty.stringValue = GUI.TextField(new Rect(10, 80, 250, 15), excelPathProperty.stringValue);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                serializedObject.ApplyModifiedProperties();
+                ExcelToolScriptableObject.Save();
+            }
 
             // 默认路径生成
-            if (GUI.Button(new Rect(10, 90, 250, 40), "读取默认路径的Excel配置表"))
+            if (GUI.Button(new Rect(10, 100, 250, 40), "读取路径中的所有Excel配置表"))
             {
                 switch (targetStrs[nowSelectedIndex])
                 {
@@ -98,28 +137,11 @@ namespace GameFramework.GFExcelTool
                         break;
                 }
             }
+        }
 
-            if (GUI.Button(new Rect(10, 140, 250, 40), "读取选中文件夹里的所有Excel配置表"))
-            {
-                switch (targetStrs[nowSelectedIndex])
-                {
-                    case "Binary":
-                        if (Selection.activeObject != null && Selection.activeObject is DefaultAsset)
-                        {
-                            string selectedFolderPath = AssetDatabase.GetAssetPath(Selection.activeObject);
-                            GenerateExcelToBinaryInfo(selectedFolderPath);
-                        }
-                        break;
-
-                    case "Json":
-                        if (Selection.activeObject != null && Selection.activeObject is DefaultAsset)
-                        {
-                            string selectedFolderPath = AssetDatabase.GetAssetPath(Selection.activeObject);
-                            GenerateExcelToJsonInfo(selectedFolderPath);
-                        }
-                        break;
-                }
-            }
+        private void OnDisable()
+        {
+            ExcelToolScriptableObject.Save();
         }
 
         /// <summary>
@@ -130,7 +152,7 @@ namespace GameFramework.GFExcelTool
         {
             if (filePath == null)
             {
-                filePath = EXCEL_PATH;
+                filePath = Application.dataPath + "/" + excelPathProperty.stringValue;
             }
 
             // 创建一个目录对象，如果不存在的话，就创建一个目录
@@ -187,7 +209,7 @@ namespace GameFramework.GFExcelTool
         {
             if (filePath == null)
             {
-                filePath = EXCEL_PATH;
+                filePath = Application.dataPath + "/" + excelPathProperty.stringValue;
             }
             // 创建一个目录对象，如果不存在的话，就创建一个目录
             DirectoryInfo dInfo = Directory.CreateDirectory(filePath);

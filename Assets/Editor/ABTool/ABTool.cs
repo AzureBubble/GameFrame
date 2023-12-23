@@ -48,6 +48,7 @@ public class ABTool : EditorWindow
         GUI.Label(new Rect(10, 10, 100, 25), "平台选择");
         nowSelectedIndex = GUI.Toolbar(new Rect(80, 10, 230, 25), nowSelectedIndex, targetStrs);
 
+        serializedObject.Update();
         EditorGUI.BeginChangeCheck();
 
         GUI.Label(new Rect(10, 40, 100, 20), "资源服务器IP地址");
