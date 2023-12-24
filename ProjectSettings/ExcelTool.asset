@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   excelPath: ArtRes/Excel/
+  dataClassPath: Scripts/ExcelData/DataClass/
+  dataContainerPath: Scripts/ExcelData/Container/
+  dataBinaryPath: Binary/
+  dataJsonPath: Json/

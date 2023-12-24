@@ -63,8 +63,10 @@ namespace GameFramework.GameTool
                 GUILayout.BeginHorizontal();
                 {
                     GUILayout.Label("资源服务器IP地址");
-                    serverIpProperty.stringValue = GUILayout.TextField(serverIpProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.Space(5f);
+                    serverIpProperty.stringValue = GUILayout.TextField(serverIpProperty.stringValue, GUILayout.Width(260f));
                 }
+                GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
 
                 GUILayout.Space(5f);
@@ -72,10 +74,15 @@ namespace GameFramework.GameTool
                 GUILayout.BeginHorizontal();
                 {
                     GUILayout.Label("用户名");
-                    userNameProperty.stringValue = GUILayout.TextField(userNameProperty.stringValue, GUILayout.Width(200f));
+                    GUILayout.Space(5f);
+                    userNameProperty.stringValue = GUILayout.TextField(userNameProperty.stringValue, GUILayout.Width(100f));
+                    GUILayout.Space(80f);
                     GUILayout.Label("密码");
-                    passwordProperty.stringValue = GUILayout.TextField(passwordProperty.stringValue, GUILayout.Width(200f));
+                    GUILayout.Space(5f);
+                    passwordProperty.stringValue = GUILayout.TextField(passwordProperty.stringValue, GUILayout.Width(100f));
                 }
+
+                GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
 
                 GUILayout.Space(5f);

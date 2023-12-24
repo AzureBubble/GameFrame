@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Experimental.AI;
 
 namespace GameFramework.GameTool
 {
@@ -21,30 +22,32 @@ namespace GameFramework.GameTool
         private SerializedProperty dataBinaryPathProperty; // 二进制数据存储路径
         private SerializedProperty dataJsonPathProperty; // Json数据存储路径
 
+        private StringBuilder tempString;
+
         /// <summary>
         /// Excel文件存放路径
         /// </summary>
-        //private static string EXCEL_PATH = Application.dataPath + "/ArtRes/Excel/";
+        //private static StringBuilder EXCEL_PATH;
 
         /// <summary>
         /// 数据结构类存储路径
         /// </summary>
-        private static string DATA_CLASS_PATH = Application.dataPath + "/Scripts/ExcelData/DataClass/";
+        //private static string DATA_CLASS_PATH = Application.dataPath + "/Scripts/ExcelData/DataClass/";
 
         /// <summary>
         /// 数据容器类存储路径
         /// </summary>
-        private static string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/ExcelData/Container/";
+        //private static string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/ExcelData/Container/";
 
         /// <summary>
         /// 二进制数据存储路径
         /// </summary>
-        private static string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Binary/";
+        //private static string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Binary/";
 
         /// <summary>
         /// Json数据存储路径
         /// </summary>
-        private static string DATA_JSON_PATH = Application.streamingAssetsPath + "/Json/";
+        //private static string DATA_JSON_PATH = Application.streamingAssetsPath + "/Json/";
 
         /// <summary>
         /// 变量名所在行索引
@@ -94,10 +97,10 @@ namespace GameFramework.GameTool
             serializedObject?.Dispose();
             serializedObject = new SerializedObject(ExcelToolScriptableObject.Instance);
             excelPathProperty = serializedObject.FindProperty("excelPath");
-            //dataClassPathProperty = serializedObject.FindProperty("dataClassPath");
-            //dataContainerPathProperty = serializedObject.FindProperty("dataContainerPath");
-            //dataBinaryPathProperty = serializedObject.FindProperty("dataBinaryPath");
-            //dataJsonPathProperty = serializedObject.FindProperty("dataJsonPath");
+            dataClassPathProperty = serializedObject.FindProperty("dataClassPath");
+            dataContainerPathProperty = serializedObject.FindProperty("dataContainerPath");
+            dataBinaryPathProperty = serializedObject.FindProperty("dataBinaryPath");
+            dataJsonPathProperty = serializedObject.FindProperty("dataJsonPath");
         }
 
         public void OnGUI()
@@ -116,22 +119,59 @@ namespace GameFramework.GameTool
 
             GUILayout.Space(5f);
 
-            GUILayout.BeginHorizontal();
-            {
-                GUILayout.Label("读表路径(末尾要加'/'):" + excelPathProperty.stringValue);
+            serializedObject.Update();
+            EditorGUI.BeginChangeCheck();
 
-                serializedObject.Update();
-                EditorGUI.BeginChangeCheck();
+            {
+                GUILayout.BeginHorizontal();
                 {
+                    GUILayout.Label($"读表路径:Assets/{excelPathProperty.stringValue}");
                     excelPathProperty.stringValue = GUILayout.TextField(excelPathProperty.stringValue, GUILayout.Width(400f));
                 }
-                if (EditorGUI.EndChangeCheck())
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(5f);
+
+                GUILayout.BeginHorizontal();
                 {
-                    serializedObject.ApplyModifiedProperties();
-                    ExcelToolScriptableObject.Save();
+                    GUILayout.Label($"数据结构类存储路径:Assets/{dataClassPathProperty.stringValue}");
+                    dataClassPathProperty.stringValue = GUILayout.TextField(dataClassPathProperty.stringValue, GUILayout.Width(400f));
                 }
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(5f);
+
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label($"数据容器类存储路径:Assets/{dataContainerPathProperty.stringValue}");
+                    dataContainerPathProperty.stringValue = GUILayout.TextField(dataContainerPathProperty.stringValue, GUILayout.Width(400f));
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(5f);
+
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label($"二进制数据存储路径:Assets/StreamingAssets/{dataBinaryPathProperty.stringValue}");
+                    dataBinaryPathProperty.stringValue = GUILayout.TextField(dataBinaryPathProperty.stringValue, GUILayout.Width(400f));
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(5f);
+
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label($"Json数据存储路径:Assets/StreamingAssets/{dataJsonPathProperty.stringValue}");
+                    dataJsonPathProperty.stringValue = GUILayout.TextField(dataJsonPathProperty.stringValue, GUILayout.Width(400f));
+                }
+                GUILayout.EndHorizontal();
             }
-            GUILayout.EndHorizontal();
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                serializedObject.ApplyModifiedProperties();
+                ExcelToolScriptableObject.Save();
+            }
 
             GUILayout.Space(5f);
 
@@ -298,10 +338,20 @@ namespace GameFramework.GameTool
             // 字段描述行
             DataRow rowDescription = GetVariableDescriptionRow(table);
 
-            // 判断路径文件夹是否存在，不存在则创建
-            if (!Directory.Exists(DATA_CLASS_PATH))
+            tempString = new StringBuilder(Application.dataPath + "/" + dataClassPathProperty.stringValue);
+
+            if (tempString[tempString.Length - 1] != '/')
             {
-                Directory.CreateDirectory(DATA_CLASS_PATH);
+                tempString.Append("/");
+            }
+
+            string dataClassPath = tempString.ToString();
+            tempString = null;
+
+            // 判断路径文件夹是否存在，不存在则创建
+            if (!Directory.Exists(dataClassPath))
+            {
+                Directory.CreateDirectory(dataClassPath);
             }
 
             string str = "public class " + table.TableName + "\n{\n";
@@ -324,7 +374,7 @@ namespace GameFramework.GameTool
 
             str += "}";
 
-            File.WriteAllText(DATA_CLASS_PATH + table.TableName + ".cs", str);
+            File.WriteAllText(dataClassPath + table.TableName + ".cs", str);
         }
 
         /// <summary>
@@ -339,10 +389,21 @@ namespace GameFramework.GameTool
             // 得到字段类型行
             DataRow rowType = GetVariableTypeRow(table);
 
-            // 判断路径文件夹是否存在，不存在则创建
-            if (!Directory.Exists(DATA_CONTAINER_PATH))
+            tempString = new StringBuilder(Application.dataPath + "/" + dataContainerPathProperty.stringValue);
+
+            if (tempString[tempString.Length - 1] != '/')
             {
-                Directory.CreateDirectory(DATA_CONTAINER_PATH);
+                tempString.Append("/");
+            }
+
+            string dataContainerPath = tempString.ToString();
+            Debug.Log("dataContainerPath:" + dataContainerPath);
+            tempString = null;
+
+            // 判断路径文件夹是否存在，不存在则创建
+            if (!Directory.Exists(dataContainerPath))
+            {
+                Directory.CreateDirectory(dataContainerPath);
             }
 
             string str = "using System.Collections.Generic;\n\n";
@@ -351,7 +412,7 @@ namespace GameFramework.GameTool
             str += " dataDic = new ();\n";
             str += "}";
 
-            File.WriteAllText(DATA_CONTAINER_PATH + table.TableName + "Container.cs", str);
+            File.WriteAllText(dataContainerPath + table.TableName + "Container.cs", str);
         }
 
         /// <summary>
@@ -360,14 +421,24 @@ namespace GameFramework.GameTool
         /// <param name="table">数据表</param>
         private void GenerateExcelToBinary(DataTable table)
         {
-            // 判断路径文件夹是否存在，不存在则创建
-            if (!Directory.Exists(DATA_BINARY_PATH))
+            tempString = new StringBuilder(Application.streamingAssetsPath + "/" + dataBinaryPathProperty.stringValue);
+
+            if (tempString[tempString.Length - 1] != '/')
             {
-                Directory.CreateDirectory(DATA_BINARY_PATH);
+                tempString.Append("/");
+            }
+
+            string dataBinaryPath = tempString.ToString();
+            tempString = null;
+
+            // 判断路径文件夹是否存在，不存在则创建
+            if (!Directory.Exists(dataBinaryPath))
+            {
+                Directory.CreateDirectory(dataBinaryPath);
             }
 
             // 创建二进制文件
-            using (FileStream fs = new FileStream(DATA_BINARY_PATH + table.TableName + ".sav", FileMode.OpenOrCreate, FileAccess.Write))
+            using (FileStream fs = new FileStream(dataBinaryPath + table.TableName + ".sav", FileMode.OpenOrCreate, FileAccess.Write))
             {
                 // 存储数据内容行数
                 fs.Write(BitConverter.GetBytes(table.Rows.Count - 4), 0, 4);
@@ -428,10 +499,20 @@ namespace GameFramework.GameTool
             // 字段类型行
             DataRow rowType = GetVariableTypeRow(table);
 
-            // 判断路径文件夹是否存在，不存在则创建
-            if (!Directory.Exists(DATA_JSON_PATH))
+            tempString = new StringBuilder(Application.streamingAssetsPath + "/" + dataJsonPathProperty.stringValue);
+
+            if (tempString[tempString.Length - 1] != '/')
             {
-                Directory.CreateDirectory(DATA_JSON_PATH);
+                tempString.Append("/");
+            }
+
+            string dataJsonPath = tempString.ToString();
+            tempString = null;
+
+            // 判断路径文件夹是否存在，不存在则创建
+            if (!Directory.Exists(dataJsonPath))
+            {
+                Directory.CreateDirectory(dataJsonPath);
             }
             DataRow row;
             string str = "[\n";
@@ -480,7 +561,7 @@ namespace GameFramework.GameTool
 
             str += "]";
 
-            File.WriteAllText(DATA_JSON_PATH + table.TableName + ".json", str);
+            File.WriteAllText(dataJsonPath + table.TableName + ".json", str);
 
             Debug.Log($"已生成 {table.TableName} 的Json数据表和对应的数据结构类");
         }
