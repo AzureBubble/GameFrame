@@ -3,13 +3,13 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace GameFramework.GFLuaTool
+namespace GameFramework.GameTool
 {
     /// <summary>
     /// Lua 工具类
     /// 用于自动生成 Lua .txt文件 方便AB包打包
     /// </summary>
-    public class LuaTool : EditorWindow
+    public class LuaTool
     {
         private SerializedObject serializedObject;
         private SerializedProperty luaDirNameProperty; // Lua原文件夹名
@@ -20,13 +20,13 @@ namespace GameFramework.GFLuaTool
         //private string luaNewDirName = "LuaTxt"; // Lua转存文件夹名
         //private string abName = "lua"; // Lua的AB包名
 
-        [MenuItem("GameTool/LuaTool")]
-        public static void OpenLuaToolWindow()
-        {
-            LuaTool window = EditorWindow.GetWindowWithRect<LuaTool>(new Rect(0, 0, 250, 130));
-            window.autoRepaintOnSceneChange = true;
-            window.Show();
-        }
+        //[MenuItem("GameTool/LuaTool")]
+        //public static void OpenLuaToolWindow()
+        //{
+        //    LuaTool window = EditorWindow.GetWindowWithRect<LuaTool>(new Rect(0, 0, 250, 130));
+        //    window.autoRepaintOnSceneChange = true;
+        //    window.Show();
+        //}
 
         private void Init()
         {
@@ -37,7 +37,7 @@ namespace GameFramework.GFLuaTool
             abNameProperty = serializedObject.FindProperty("abName");
         }
 
-        private void OnGUI()
+        public void OnGUI()
         {
             if (serializedObject == null || !serializedObject.targetObject)
             {
@@ -45,14 +45,36 @@ namespace GameFramework.GFLuaTool
             }
 
             serializedObject.Update();
-            EditorGUI.BeginChangeCheck();
 
-            GUI.Label(new Rect(10, 10, 100, 20), "Lua原文件夹名");
-            luaDirNameProperty.stringValue = GUI.TextField(new Rect(120, 10, 100, 20), luaDirNameProperty.stringValue);
-            GUI.Label(new Rect(10, 35, 100, 20), "Lua转存文件夹名");
-            luaNewDirNameProperty.stringValue = GUI.TextField(new Rect(120, 35, 100, 20), luaNewDirNameProperty.stringValue);
-            GUI.Label(new Rect(10, 60, 100, 20), "Lua的AB包名");
-            abNameProperty.stringValue = GUI.TextField(new Rect(120, 60, 100, 20), abNameProperty.stringValue);
+            EditorGUI.BeginChangeCheck();
+            {
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label("Lua原文件夹名");
+                    luaDirNameProperty.stringValue = GUILayout.TextField(luaDirNameProperty.stringValue, GUILayout.Width(400f));
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(5f);
+
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label("Lua转存文件夹名");
+                    luaNewDirNameProperty.stringValue = GUILayout.TextField(luaNewDirNameProperty.stringValue, GUILayout.Width(400f));
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(5f);
+
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label("Lua的AB包名");
+                    abNameProperty.stringValue = GUILayout.TextField(abNameProperty.stringValue, GUILayout.Width(400f));
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(5f);
+            }
 
             if (EditorGUI.EndChangeCheck())
             {
@@ -60,11 +82,19 @@ namespace GameFramework.GFLuaTool
                 LuaToolScriptableObject.Save();
             }
 
-            // 把 lua 文件增加 .txt后缀 并移动到指定路径
-            if (GUI.Button(new Rect(10, 85, 210, 25), "Copy Lua To Txt"))
+            if (GUILayout.Button("Copy Lua To Txt", GUILayout.Height(30f)))
             {
                 CopyLuaToTxt(luaDirNameProperty.stringValue, luaNewDirNameProperty.stringValue, abNameProperty.stringValue);
             }
+
+            //GUI.Label(new Rect(10, 10, 100, 20), "Lua原文件夹名");
+            //luaDirNameProperty.stringValue = GUI.TextField(new Rect(120, 10, 100, 20), luaDirNameProperty.stringValue);
+            //GUI.Label(new Rect(10, 35, 100, 20), "Lua转存文件夹名");
+            //luaNewDirNameProperty.stringValue = GUI.TextField(new Rect(120, 35, 100, 20), luaNewDirNameProperty.stringValue);
+            //GUI.Label(new Rect(10, 60, 100, 20), "Lua的AB包名");
+            //abNameProperty.stringValue = GUI.TextField(new Rect(120, 60, 100, 20), abNameProperty.stringValue);
+
+            // 把 lua 文件增加 .txt后缀 并移动到指定路径
         }
 
         /// <summary>

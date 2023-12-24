@@ -6,13 +6,13 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace GameFramework.GFExcelTool
+namespace GameFramework.GameTool
 {
     /// <summary>
     /// Excel 工具类
     /// 用于读取 Excel 配置表
     /// </summary>
-    public class ExcelTool : EditorWindow
+    public class ExcelTool
     {
         private SerializedObject serializedObject;
         private SerializedProperty excelPathProperty; // Excel文件存放路径
@@ -74,15 +74,15 @@ namespace GameFramework.GFExcelTool
         private int nowSelectedIndex = 0;
         private string[] targetStrs = new string[] { "Binary", "Json" };
 
-        [MenuItem("GameTool/ExcelTool")]
-        public static void OpenExcelToolWindow()
-        {
-            // 获取 ExcelTool 编辑器窗口对象
-            ExcelTool window = EditorWindow.GetWindowWithRect<ExcelTool>(new Rect(0, 0, 280, 160));
-            window.autoRepaintOnSceneChange = true;
-            // 显示窗口
-            window.Show();
-        }
+        //[MenuItem("GameTool/ExcelTool")]
+        //public static void OpenExcelToolWindow()
+        //{
+        //    // 获取 ExcelTool 编辑器窗口对象
+        //    ExcelTool window = EditorWindow.GetWindowWithRect<ExcelTool>(new Rect(0, 0, 280, 160));
+        //    window.autoRepaintOnSceneChange = true;
+        //    // 显示窗口
+        //    window.Show();
+        //}
 
         private void OnFocus()
         {
@@ -100,31 +100,43 @@ namespace GameFramework.GFExcelTool
             //dataJsonPathProperty = serializedObject.FindProperty("dataJsonPath");
         }
 
-        private void OnGUI()
+        public void OnGUI()
         {
             if (serializedObject == null || !serializedObject.targetObject)
             {
                 Init();
             }
 
-            GUI.Label(new Rect(10, 10, 250, 15), "生成目标文件格式选择");
-            nowSelectedIndex = GUI.Toolbar(new Rect(10, 30, 250, 25), nowSelectedIndex, targetStrs);
-
-            GUI.Label(new Rect(10, 60, 250, 15), "读表路径(末尾要加'/'):" + excelPathProperty.stringValue);
-
-            serializedObject.Update();
-            EditorGUI.BeginChangeCheck();
-
-            excelPathProperty.stringValue = GUI.TextField(new Rect(10, 80, 250, 15), excelPathProperty.stringValue);
-
-            if (EditorGUI.EndChangeCheck())
+            GUILayout.BeginHorizontal();
             {
-                serializedObject.ApplyModifiedProperties();
-                ExcelToolScriptableObject.Save();
+                GUILayout.Label("生成目标文件格式选择");
+                nowSelectedIndex = GUILayout.Toolbar(nowSelectedIndex, targetStrs);
             }
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(5f);
+
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("读表路径(末尾要加'/'):" + excelPathProperty.stringValue);
+
+                serializedObject.Update();
+                EditorGUI.BeginChangeCheck();
+                {
+                    excelPathProperty.stringValue = GUILayout.TextField(excelPathProperty.stringValue, GUILayout.Width(400f));
+                }
+                if (EditorGUI.EndChangeCheck())
+                {
+                    serializedObject.ApplyModifiedProperties();
+                    ExcelToolScriptableObject.Save();
+                }
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(5f);
 
             // 默认路径生成
-            if (GUI.Button(new Rect(10, 100, 250, 40), "读取路径中的所有Excel配置表"))
+            if (GUILayout.Button("读取路径中的所有Excel配置表", GUILayout.Height(30f)))
             {
                 switch (targetStrs[nowSelectedIndex])
                 {
@@ -137,6 +149,22 @@ namespace GameFramework.GFExcelTool
                         break;
                 }
             }
+
+            //GUI.Label(new Rect(10, 10, 250, 15), "生成目标文件格式选择");
+            //nowSelectedIndex = GUI.Toolbar(new Rect(10, 30, 250, 25), nowSelectedIndex, targetStrs);
+
+            //GUI.Label(new Rect(10, 60, 250, 15), "读表路径(末尾要加'/'):" + excelPathProperty.stringValue);
+
+            //serializedObject.Update();
+            //EditorGUI.BeginChangeCheck();
+
+            //excelPathProperty.stringValue = GUI.TextField(new Rect(10, 80, 250, 15), excelPathProperty.stringValue);
+
+            //if (EditorGUI.EndChangeCheck())
+            //{
+            //    serializedObject.ApplyModifiedProperties();
+            //    ExcelToolScriptableObject.Save();
+            //}
         }
 
         private void OnDisable()
