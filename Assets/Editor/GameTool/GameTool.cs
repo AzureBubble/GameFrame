@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static GameFramework.GameTool.GameTool;
 
 namespace GameFramework.GameTool
 {
@@ -12,7 +11,7 @@ namespace GameFramework.GameTool
         [MenuItem("GameTool/OpenGameToolWindow")]
         private static void OpenGameToolWindow()
         {
-            GameTool window = EditorWindow.GetWindow<GameTool>();
+            GameTool window = EditorWindow.GetWindow<GameTool>("GameTool");
             window.minSize = new Vector2(400f, 250f);
             window.maxSize = new Vector2(900f, 650f);
             window.Show();
@@ -29,7 +28,7 @@ namespace GameFramework.GameTool
         }
 
         /// <summary>
-        /// ≥ı ºªØ
+        /// ÂàùÂßãÂåñ
         /// </summary>
         private void Init()
         {
@@ -69,9 +68,12 @@ namespace GameFramework.GameTool
             }
         }
 
+        /// <summary>
+        /// Â∑•ÂÖ∑È°µÁ≠æÂàáÊç¢
+        /// </summary>
         private void TypeToggle()
         {
-            // ªÊ÷∆∂•≤øπ§æﬂ—°‘Ò“≥«©
+            // ÁªòÂà∂È°∂ÈÉ®Â∑•ÂÖ∑ÈÄâÊã©È°µÁ≠æ
             GUILayout.BeginHorizontal();
             GUILayout.Space(30);
             float toolbarWidth = position.width - 15 * 4;
@@ -83,7 +85,7 @@ namespace GameFramework.GameTool
         }
 
         /// <summary>
-        /// π§æﬂ¿‡–Õ
+        /// Â∑•ÂÖ∑Á±ªÂûã
         /// </summary>
         public enum ToolType
         {

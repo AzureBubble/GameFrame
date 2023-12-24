@@ -6,19 +6,19 @@ using UnityEngine;
 namespace GameFramework.GameTool
 {
     /// <summary>
-    /// Lua ¹¤¾ßÀà
-    /// ÓÃÓÚ×Ô¶¯Éú³É Lua .txtÎÄ¼ş ·½±ãAB°ü´ò°ü
+    /// Lua å·¥å…·ç±»
+    /// ç”¨äºè‡ªåŠ¨ç”Ÿæˆ Lua .txtæ–‡ä»¶ æ–¹ä¾¿ABåŒ…æ‰“åŒ…
     /// </summary>
     public class LuaTool
     {
         private SerializedObject serializedObject;
-        private SerializedProperty luaDirNameProperty; // LuaÔ­ÎÄ¼ş¼ĞÃû
-        private SerializedProperty luaNewDirNameProperty; // Lua×ª´æÎÄ¼ş¼ĞÃû
-        private SerializedProperty abNameProperty; // LuaµÄAB°üÃû
+        private SerializedProperty luaDirNameProperty; // LuaåŸæ–‡ä»¶å¤¹å
+        private SerializedProperty luaNewDirNameProperty; // Luaè½¬å­˜æ–‡ä»¶å¤¹å
+        private SerializedProperty abNameProperty; // Luaçš„ABåŒ…å
 
-        //private string luaDirName = "Lua"; // LuaÔ­ÎÄ¼ş¼ĞÃû
-        //private string luaNewDirName = "LuaTxt"; // Lua×ª´æÎÄ¼ş¼ĞÃû
-        //private string abName = "lua"; // LuaµÄAB°üÃû
+        //private string luaDirName = "Lua"; // LuaåŸæ–‡ä»¶å¤¹å
+        //private string luaNewDirName = "LuaTxt"; // Luaè½¬å­˜æ–‡ä»¶å¤¹å
+        //private string abName = "lua"; // Luaçš„ABåŒ…å
 
         //[MenuItem("GameTool/LuaTool")]
         //public static void OpenLuaToolWindow()
@@ -50,7 +50,7 @@ namespace GameFramework.GameTool
             {
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("LuaÔ­ÎÄ¼ş¼ĞÃû");
+                    GUILayout.Label("LuaåŸæ–‡ä»¶å¤¹å");
                     luaDirNameProperty.stringValue = GUILayout.TextField(luaDirNameProperty.stringValue, GUILayout.Width(400f));
                 }
                 GUILayout.EndHorizontal();
@@ -59,7 +59,7 @@ namespace GameFramework.GameTool
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("Lua×ª´æÎÄ¼ş¼ĞÃû");
+                    GUILayout.Label("Luaè½¬å­˜æ–‡ä»¶å¤¹å");
                     luaNewDirNameProperty.stringValue = GUILayout.TextField(luaNewDirNameProperty.stringValue, GUILayout.Width(400f));
                 }
                 GUILayout.EndHorizontal();
@@ -68,7 +68,7 @@ namespace GameFramework.GameTool
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label("LuaµÄAB°üÃû");
+                    GUILayout.Label("Luaçš„ABåŒ…å");
                     abNameProperty.stringValue = GUILayout.TextField(abNameProperty.stringValue, GUILayout.Width(400f));
                 }
                 GUILayout.EndHorizontal();
@@ -87,22 +87,22 @@ namespace GameFramework.GameTool
                 CopyLuaToTxt(luaDirNameProperty.stringValue, luaNewDirNameProperty.stringValue, abNameProperty.stringValue);
             }
 
-            //GUI.Label(new Rect(10, 10, 100, 20), "LuaÔ­ÎÄ¼ş¼ĞÃû");
+            //GUI.Label(new Rect(10, 10, 100, 20), "LuaåŸæ–‡ä»¶å¤¹å");
             //luaDirNameProperty.stringValue = GUI.TextField(new Rect(120, 10, 100, 20), luaDirNameProperty.stringValue);
-            //GUI.Label(new Rect(10, 35, 100, 20), "Lua×ª´æÎÄ¼ş¼ĞÃû");
+            //GUI.Label(new Rect(10, 35, 100, 20), "Luaè½¬å­˜æ–‡ä»¶å¤¹å");
             //luaNewDirNameProperty.stringValue = GUI.TextField(new Rect(120, 35, 100, 20), luaNewDirNameProperty.stringValue);
-            //GUI.Label(new Rect(10, 60, 100, 20), "LuaµÄAB°üÃû");
+            //GUI.Label(new Rect(10, 60, 100, 20), "Luaçš„ABåŒ…å");
             //abNameProperty.stringValue = GUI.TextField(new Rect(120, 60, 100, 20), abNameProperty.stringValue);
 
-            // °Ñ lua ÎÄ¼şÔö¼Ó .txtºó×º ²¢ÒÆ¶¯µ½Ö¸¶¨Â·¾¶
+            // æŠŠ lua æ–‡ä»¶å¢åŠ  .txtåç¼€ å¹¶ç§»åŠ¨åˆ°æŒ‡å®šè·¯å¾„
         }
 
         /// <summary>
-        /// °Ñ lua ÎÄ¼şÔö¼Ó .txtºó×º ²¢ÒÆ¶¯µ½Ö¸¶¨Â·¾¶´æ·Å
+        /// æŠŠ lua æ–‡ä»¶å¢åŠ  .txtåç¼€ å¹¶ç§»åŠ¨åˆ°æŒ‡å®šè·¯å¾„å­˜æ”¾
         /// </summary>
         private void CopyLuaToTxt(string dirName, string newDirName, string abName)
         {
-            // lua ÎÄ¼şµÄ´æ·ÅÂ·¾¶
+            // lua æ–‡ä»¶çš„å­˜æ”¾è·¯å¾„
             string path = Application.dataPath + $"/{dirName}/";
 
             if (!Directory.Exists(path))
@@ -110,7 +110,7 @@ namespace GameFramework.GameTool
                 return;
             }
 
-            // ÒÆ¶¯µ½µÄĞÂ´æ´¢Â·¾¶
+            // ç§»åŠ¨åˆ°çš„æ–°å­˜å‚¨è·¯å¾„
             string newPath = Application.dataPath + $"/{newDirName}/";
             if (!Directory.Exists(newPath))
             {
@@ -118,22 +118,22 @@ namespace GameFramework.GameTool
             }
             else
             {
-                // µÃµ½Â·¾¶ÏÂµÄËùÓĞ .txtµÄÎÄ¼ş
+                // å¾—åˆ°è·¯å¾„ä¸‹çš„æ‰€æœ‰ .txtçš„æ–‡ä»¶
                 string[] oldFileStrs = Directory.GetFiles(newPath, "*.txt");
                 foreach (string file in oldFileStrs)
                 {
-                    // É¾³ıÎÄ¼ş
+                    // åˆ é™¤æ–‡ä»¶
                     File.Delete(file);
                 }
             }
 
-            // ÕÒµ½Ô­Â·¾¶ÏÂËùÓĞºó×ºÎª.luaµÄÎÄ¼ş
+            // æ‰¾åˆ°åŸè·¯å¾„ä¸‹æ‰€æœ‰åç¼€ä¸º.luaçš„æ–‡ä»¶
             string[] strs = Directory.GetFiles(path, "*.lua");
             List<string> newFileNames = new List<string>();
             string fileName = null;
             foreach (string file in strs)
             {
-                // Æ´½ÓÎÄ¼şĞÂµÄÂ·¾¶ÇÒ¼ÓÉÏ.txtºó×º
+                // æ‹¼æ¥æ–‡ä»¶æ–°çš„è·¯å¾„ä¸”åŠ ä¸Š.txtåç¼€
                 fileName = newPath + file.Substring(file.LastIndexOf("/") + 1) + ".txt";
                 newFileNames.Add(fileName);
                 File.Copy(file, fileName);
@@ -141,19 +141,19 @@ namespace GameFramework.GameTool
 
             AssetDatabase.Refresh();
 
-            // ±à¼­Æ÷½çÃæºó ÔÙĞŞ¸ÄÎÄ¼şµÄAB°üÂ·¾¶
+            // ç¼–è¾‘å™¨ç•Œé¢å å†ä¿®æ”¹æ–‡ä»¶çš„ABåŒ…è·¯å¾„
             foreach (string newFileName in newFileNames)
             {
-                // Õâ¸öAPI´«ÈëµÄÂ·¾¶±ØĞëÊÇ Ïà¶ÔÓÚAssetsÎÄ¼ş¼Ğ Assets/.../...
+                // è¿™ä¸ªAPIä¼ å…¥çš„è·¯å¾„å¿…é¡»æ˜¯ ç›¸å¯¹äºAssetsæ–‡ä»¶å¤¹ Assets/.../...
                 AssetImporter import = AssetImporter.GetAtPath(newFileName.Substring(newFileName.IndexOf("Asset")));
                 if (import != null)
                 {
-                    // ĞŞ¸ÄÎÄ¼şµÄAB°ü
+                    // ä¿®æ”¹æ–‡ä»¶çš„ABåŒ…
                     import.assetBundleName = abName;
                 }
             }
 
-            Debug.Log("LuaÎÄ¼ş×ª´æ³É¹¦");
+            Debug.Log("Luaæ–‡ä»¶è½¬å­˜æˆåŠŸ");
         }
     }
 }
