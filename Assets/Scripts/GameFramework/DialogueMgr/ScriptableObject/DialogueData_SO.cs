@@ -91,7 +91,7 @@ public class DialogueData_SO : ScriptableObject
     public bool OptionExist(string pieceId)
     {
         if (pieces.ContainsKey(pieceId))
-            if (pieces[pieceId].options.Length > 0)
+            if (pieces[pieceId].options.Count > 0)
                 return true;
 
         return false;

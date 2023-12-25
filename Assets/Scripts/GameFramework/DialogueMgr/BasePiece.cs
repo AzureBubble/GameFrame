@@ -7,7 +7,7 @@ using UnityEngine;
 public abstract class BasePiece
 {
     /// <summary>
-    /// 片段 id
+    /// 片段 pieceId
     /// </summary>
     public int id;
 

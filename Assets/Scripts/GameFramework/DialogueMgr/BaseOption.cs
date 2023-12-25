@@ -7,7 +7,7 @@ public abstract class BaseOption
     /// <summary>
     /// 选项ID
     /// </summary>
-    public int id;
+    [UnityEngine.HideInInspector] public int id;
 
     /// <summary>
     /// 跳转ID

@@ -1,15 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
 public class DialoguePiece
 {
     /// <summary>
-    /// 片段 id
-    /// </summary>
-    public int id;
-
-    /// <summary>
-    /// 片段 ID 用于寻找
+    /// 片段 pieceId
     /// </summary>
     public string pieceId;
 
@@ -30,7 +26,12 @@ public class DialoguePiece
     public string text;
 
     /// <summary>
+    /// 是否可以堆叠
+    /// </summary>
+    [HideInInspector] public bool canExpand;
+
+    /// <summary>
     /// 选项数组
     /// </summary>
-    public DialogueOption[] options;
+    public List<DialogueOption> options = new List<DialogueOption>();
 }
