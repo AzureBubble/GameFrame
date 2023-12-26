@@ -1,5 +1,4 @@
 using GameFramework.GFEventCenter;
-using GameFramework.MonoManager;
 using System.Collections;
 using UnityEngine;
 
@@ -37,7 +36,7 @@ namespace GameFramework.GFSceneManager
         public void LoadSceneAsync(string sceneName)
         {
             // MonoMgr 启动异步加载场景协程
-            MonoMgr.Instance.StartCoroutine(LoadSceneAsyncCoroutine(sceneName));
+            SingletonManager.StartCoroutine(LoadSceneAsyncCoroutine(sceneName));
         }
 
         /// <summary>

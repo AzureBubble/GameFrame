@@ -31,7 +31,7 @@ namespace GameFramework.MusicManager
         private float soundMusicVolume = 1f;
         private bool soundMusicIsMute = false;
 
-        public MusicMgr()
+        public override void Initialize()
         {
             GameObject obj = new GameObject("Music Manager");
             GameObject.DontDestroyOnLoad(obj);
@@ -212,14 +212,17 @@ namespace GameFramework.MusicManager
         public void ChangeSoundMusicVolume(float volume)
         {
             soundMusicVolume = volume;
-            foreach (AudioSource source in soundList)
+            if (soundList.Count > 0)
             {
-                source.volume = volume;
+                foreach (AudioSource source in soundList)
+                {
+                    source.volume = volume;
+                }
             }
         }
 
         /// <summary>
-        /// 这是环境音乐是否静音
+        /// 这是游戏音效是否静音
         /// </summary>
         /// <param name="isMute"></param>
         public void SetSoundMusicMute(bool isMute)
@@ -235,5 +238,17 @@ namespace GameFramework.MusicManager
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            if (IsDisposed) return;
+            if (musicMgrObj != null)
+            {
+                GameObject.Destroy(musicMgrObj);
+            }
+            soundList.Clear();
+            soundList = null;
+            base.Dispose();
+        }
     }
 }

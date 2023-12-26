@@ -8,7 +8,7 @@ namespace GameFramework.GFInputManager
     /// <summary>
     /// 命令模式的输入管理器
     /// </summary>
-    public class InputMgr : Singleton<InputMgr>
+    public class InputMgr : Singleton<InputMgr>, IUpdateSingleton
     {
         private bool canInput; // 是否可输入
         private List<ICommand> commands; // 命令容器
@@ -16,10 +16,8 @@ namespace GameFramework.GFInputManager
         private Dictionary<int, List<E_KeyCode_Command_Type>> mouseButtons; // 存储已经注册按键
         private Dictionary<string, List<E_KeyCode_Command_Type>> hotKeys; // 存储已经注册按键
 
-        public InputMgr()
+        public override void Initialize()
         {
-            // 把 Update 函数注册到 Mono 管理器中运行
-            MonoMgr.Instance.AddUpdateListener(Update);
             // 初始化容器
             commands = new List<ICommand>(16);
             keyCodes = new Dictionary<KeyCode, List<E_KeyCode_Command_Type>>(16);
@@ -27,7 +25,7 @@ namespace GameFramework.GFInputManager
             hotKeys = new Dictionary<string, List<E_KeyCode_Command_Type>>();
         }
 
-        private void Update()
+        public void OnUpdate()
         {
             // 如果不监听输入 则直接返回 不再监听键盘输入
             if (!canInput) return;
@@ -352,11 +350,20 @@ namespace GameFramework.GFInputManager
         /// <summary>
         /// 清空容器中的命令
         /// </summary>
-        public void Clear()
+        private void Clear()
         {
             commands.Clear();
             keyCodes.Clear();
+            mouseButtons.Clear();
+            hotKeys.Clear();
             canInput = false;
+        }
+
+        public override void Dispose()
+        {
+            if (IsDisposed) return;
+            Clear();
+            base.Dispose();
         }
     }
 }

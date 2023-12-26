@@ -42,7 +42,7 @@ namespace GameFramework.PackageMgr.ResourcesManager
         public void LoadResAsync<T>(string path, UnityAction<T> callback, string objName = null) where T : Object
         {
             // 协程异步加载资源
-            MonoMgr.Instance.StartCoroutine(LoadResAsyncCoroutine<T>(path, callback, objName));
+            SingletonManager.StartCoroutine(LoadResAsyncCoroutine<T>(path, callback, objName));
         }
 
         private IEnumerator LoadResAsyncCoroutine<T>(string path, UnityAction<T> callback, string objName = null) where T : Object

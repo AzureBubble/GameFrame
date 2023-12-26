@@ -35,7 +35,7 @@ namespace GameFramework.GFUIManager
 
         private PlayerInputAction inputAction;
 
-        public UIManager()
+        public override void Initialize()
         {
             // 构造函数时，加载 UI 面板，并设置不销毁
             GameObject obj = ResourcesMgr.Instance.LoadRes<GameObject>("UI/Canvas", "Canvas");
@@ -51,7 +51,7 @@ namespace GameFramework.GFUIManager
             panelDic = new Dictionary<string, BasePanel>();
 
             // 获得全局唯一的键盘映射
-            inputAction = GameManager.Instance.playerInputAction;
+            //inputAction = GameManager.Instance.playerInputAction;
         }
 
         #region 面板功能(获取面板，显隐面板，面板控件自定义事件增加)
@@ -184,6 +184,18 @@ namespace GameFramework.GFUIManager
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            if (IsDisposed) return;
+            if (canvas != null)
+            {
+                GameObject.Destroy(canvas.gameObject);
+            }
+            panelDic = null;
+
+            base.Dispose();
+        }
 
         #region 新输入系统改键功能
 

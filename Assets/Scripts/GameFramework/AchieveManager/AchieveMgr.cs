@@ -19,7 +19,7 @@ namespace GameFramework.AchieveManager
         /// <summary>
         /// 初始化成就系统信息数据
         /// </summary>
-        public void Init()
+        public override void Initialize()
         {
             achievementDict = new Dictionary<string, BaseAchievement>(16);
             EarnDict = new Dictionary<string, BaseAchievement>(16);
@@ -67,6 +67,14 @@ namespace GameFramework.AchieveManager
         private void NotifyUIUpdate(string name)
         {
             EventCenter.Instance.EventTrigger("UpdateAchievement", name);
+        }
+
+        public override void Dispose()
+        {
+            if (IsDisposed) return;
+            achievementDict.Clear();
+            EarnDict.Clear();
+            base.Dispose();
         }
     }
 }

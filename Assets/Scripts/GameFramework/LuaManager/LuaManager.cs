@@ -142,8 +142,10 @@ namespace GameFramework.LuaMgr
         /// <summary>
         /// 销毁解析器
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
+            if (IsDisposed) return;
+
             if (luaEnv == null)
             {
                 Debug.Log("Lua 解析器未初始化");
@@ -151,6 +153,8 @@ namespace GameFramework.LuaMgr
             }
             luaEnv.Dispose();
             luaEnv = null;
+
+            base.Dispose();
         }
 
         #endregion

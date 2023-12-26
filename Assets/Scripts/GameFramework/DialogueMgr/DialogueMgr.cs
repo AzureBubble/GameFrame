@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 
 /// <summary>
@@ -13,7 +12,7 @@ public class DialogueMgr : Singleton<DialogueMgr>
 
     private bool isInit;
 
-    private void InitDialogue()
+    public override void Initialize()
     {
         if (isInit) return;
 
@@ -87,5 +86,13 @@ public class DialogueMgr : Singleton<DialogueMgr>
                 return true;
 
         return false;
+    }
+
+    public override void Dispose()
+    {
+        if (IsDisposed) return;
+        pieces.Clear();
+        isInit = false;
+        base.Dispose();
     }
 }

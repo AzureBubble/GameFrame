@@ -252,5 +252,12 @@ namespace GameFramework.GFEventCenter
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            if (IsDisposed) return;
+            eventDic.Clear();
+            base.Dispose();
+        }
     }
 }

@@ -284,5 +284,13 @@ namespace GameFramework.PersistenceDataMgr
 
             return data;
         }
+
+        public override void Dispose()
+        {
+            if (IsDisposed) return;
+            tableDic.Clear();
+            IsInit = false;
+            base.Dispose();
+        }
     }
 }

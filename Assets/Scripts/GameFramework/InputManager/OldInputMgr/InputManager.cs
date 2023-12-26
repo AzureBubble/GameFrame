@@ -31,7 +31,7 @@ namespace GameFramework.GFInputManager
     /// 旧输入系统总管理者
     /// </summary>
     [Obsolete("建议使用命令模式的InputManager")]
-    public class InputManager : Singleton<InputManager>, IInputManager
+    public class InputManager : Singleton<InputManager>, IInputManager, IUpdateSingleton
     {
         // 按键控制栈  如场景一用一套按键，场景二用一套按键
         public Stack<InputController> InputStacks { get; private set; }
@@ -41,26 +41,23 @@ namespace GameFramework.GFInputManager
             InputStacks = new Stack<InputController>();
         }
 
-        public void Update()
+        public void OnUpdate()
         {
-            MonoMgr.Instance.AddUpdateListener(() =>
-            {
-                // 如果没有键盘控制映射，则不执行 Update
-                if (InputStacks.Count == 0) return;
+            // 如果没有键盘控制映射，则不执行 Update
+            if (InputStacks.Count == 0) return;
 
-                // 创建三个处理不同按键状态的协程
-                IEnumerator[] enumerators = {
+            // 创建三个处理不同按键状态的协程
+            IEnumerator[] enumerators = {
                 KeyDownCoroutine(InputStacks.Peek().KeyDownDic),
                 KeyStayCoroutine(InputStacks.Peek().KeyStayDic),
                 KeyUpCoroutine(InputStacks.Peek().KeyUpDic),
                 };
 
-                // 循环开启协程
-                foreach (var enumerator in enumerators)
-                {
-                    MonoMgr.Instance.StartCoroutine(enumerator);
-                }
-            });
+            // 循环开启协程
+            foreach (var enumerator in enumerators)
+            {
+                SingletonManager.StartCoroutine(enumerator);
+            }
         }
 
         private IEnumerator KeyDownCoroutine(Dictionary<KeyCode, UnityAction> keyDownDic)

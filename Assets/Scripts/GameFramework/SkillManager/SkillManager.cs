@@ -76,4 +76,11 @@ public class SkillManager : Singleton<SkillManager>
     {
         BinaryDataMgr.Instance.SaveData(skills, "Skills");
     }
+
+    public override void Dispose()
+    {
+        if (IsDisposed) return;
+        skills.Clear();
+        base.Dispose();
+    }
 }

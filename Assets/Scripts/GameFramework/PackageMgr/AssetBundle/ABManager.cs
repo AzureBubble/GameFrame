@@ -411,6 +411,7 @@ namespace GameFramework.PackageMgr.AssetBundleMgr
         public void ClearABRes()
         {
             AssetBundle.UnloadAllAssetBundles(false);
+            Resources.UnloadUnusedAssets();
             abDic.Clear();
             mainAB = null;
             manifest = null;
