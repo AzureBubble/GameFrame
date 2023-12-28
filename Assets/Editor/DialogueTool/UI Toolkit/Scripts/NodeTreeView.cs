@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -8,8 +9,11 @@ using UnityEngine.UIElements;
 
 public class NodeTreeView : GraphView
 {
+    private static int index = 0;
+    private string DialogueTree_Save_Path = "Assets/Game Data/ScriptableObject/Dialogue/";
     private DialogueNodeTree nodeTree;
     public Action<NodeView> OnNodeSelected;
+    private VisualElement titleDiv;
 
     // 暴露当前组件在 UIBuilder 窗口中
     public new class UxmlFactory : UxmlFactory<NodeTreeView, GraphView.UxmlTraits>
@@ -31,16 +35,36 @@ public class NodeTreeView : GraphView
 
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
     {
-        // 获取所有继承了抽象类 BaseNode 的具体实类
-        var types = TypeCache.GetTypesDerivedFrom<BaseNode>();
-        foreach (var type in types)
+        if (nodeTree == null)
         {
-            if (!type.IsAbstract)
+            evt.menu.AppendAction("Create New DialogueTree", (action) =>
             {
-                // 获取当前鼠标位置
-                Vector2 localMousePos = this.ChangeCoordinatesTo(this, evt.localMousePosition);
-                // 遍历 实类结点类型 在右键菜单中添加对应的菜单名
-                evt.menu.AppendAction($"{type.Name}", (a) => CreateNode(type, localMousePos));
+                if (!Directory.Exists(DialogueTree_Save_Path))
+                {
+                    Directory.CreateDirectory(DialogueTree_Save_Path);
+                }
+
+                nodeTree = ScriptableObject.CreateInstance<DialogueNodeTree>();
+                AssetDatabase.CreateAsset(nodeTree, DialogueTree_Save_Path + $"New DialogueNodeTree {index++}.asset");
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+                EditorGUIUtility.PingObject(nodeTree);
+                PopulateView(nodeTree);
+            });
+        }
+        else
+        {
+            // 获取所有继承了抽象类 BaseNode 的具体实类
+            var types = TypeCache.GetTypesDerivedFrom<BaseNode>();
+            foreach (var type in types)
+            {
+                if (!type.IsAbstract)
+                {
+                    // 获取当前鼠标位置
+                    Vector2 localMousePos = this.ChangeCoordinatesTo(this, evt.localMousePosition);
+                    // 遍历 实类结点类型 在右键菜单中添加对应的菜单名
+                    evt.menu.AppendAction($"{type.Name}", (action) => CreateNode(type, localMousePos));
+                }
             }
         }
 
@@ -114,14 +138,20 @@ public class NodeTreeView : GraphView
         this.nodeTree = nodeTree;
         graphViewChanged -= OnGraphViewChanged;
         DeleteElements(graphElements); // 清除视图渲染内容
-                                       // 视图变更委托
+        // 视图变更委托
         graphViewChanged += OnGraphViewChanged;
+
+        titleDiv = this.parent.Q<VisualElement>("TitleDiv");
+        var nodeTreeName = titleDiv.Q<Label>("nodeTreeName");
 
         // 如果当前选择的资源不是 DialogueNodeTree 则不继续向下执行
         if (this.nodeTree == null)
         {
+            nodeTreeName.text = "";
             return;
         }
+
+        nodeTreeName.text = nodeTree.name;
 
         // 重绘NodeTree视图
         // 重绘所有结点
@@ -161,8 +191,10 @@ public class NodeTreeView : GraphView
     {
         // 限制端口连接对象 不能为同一类型的端口 同一节点端口之间不能连接
         return ports.ToList().Where(
-            endport => endport.direction != startPort.direction
-            && endport.node != startPort.node).ToList();
+            endport =>
+            endport.direction != startPort.direction
+            && endport.node != startPort.node
+            && !endport.node.outputContainer.Contains((NodeView)startPort.node)).ToList();
     }
 
     /// <summary>

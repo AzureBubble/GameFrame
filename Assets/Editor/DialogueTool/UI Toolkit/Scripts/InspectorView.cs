@@ -38,4 +38,8 @@ public class InspectorView : VisualElement
             this.Add(container);
         }
     }
+
+    public void CreateNewDialogueTree(System.Action callback)
+    {
+    }
 }

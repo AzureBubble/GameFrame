@@ -11,7 +11,7 @@ public class DialogueTreeTool : EditorWindow
     [SerializeField]
     private VisualTreeAsset m_VisualTreeAsset = default;
 
-    [MenuItem("UI Toolkit/DialogueTool")]
+    [MenuItem("GameTool/OpenDialogueTreeWindow")]
     public static void ShowExample()
     {
         DialogueTreeTool wnd = GetWindow<DialogueTreeTool>();
