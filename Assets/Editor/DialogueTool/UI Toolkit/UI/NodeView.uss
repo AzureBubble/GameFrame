@@ -25,6 +25,8 @@
     border-top-right-radius: 5px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    margin-top: 2px;
+    padding-top: 2px;
 }
 
 #divder {
@@ -65,10 +67,10 @@
 }
 
 :hover > #Selection-border {
-    border-left-color: rgb(255, 255, 255);
-    border-right-color: rgb(255, 255, 255);
-    border-top-color: rgb(255, 255, 255);
-    border-bottom-color: rgb(255, 255, 255);
+    border-left-color: rgb(246, 255, 248);
+    border-right-color: rgb(246, 255, 248);
+    border-top-color: rgb(246, 255, 248);
+    border-bottom-color: rgb(246, 255, 248);
     border-top-width: 2px;
     border-right-width: 2px;
     border-bottom-width: 2px;
@@ -80,10 +82,10 @@
 }
 
 :selected > #Selection-border {
-    border-left-color: rgb(255, 255, 255);
-    border-right-color: rgb(255, 255, 255);
-    border-top-color: rgb(255, 255, 255);
-    border-bottom-color: rgb(255, 255, 255);
+    border-left-color: rgb(246, 255, 248);
+    border-right-color: rgb(246, 255, 248);
+    border-top-color: rgb(246, 255, 248);
+    border-bottom-color: rgb(246, 255, 248);
     border-top-width: 2px;
     border-right-width: 2px;
     border-bottom-width: 2px;
@@ -95,10 +97,10 @@
 }
 
 :hover:selected > #Selection-border {
-    border-left-color: rgb(255, 255, 255);
-    border-right-color: rgb(255, 255, 255);
-    border-top-color: rgb(255, 255, 255);
-    border-bottom-color: rgb(255, 255, 255);
+    border-left-color: rgb(246, 255, 248);
+    border-right-color: rgb(246, 255, 248);
+    border-top-color: rgb(246, 255, 248);
+    border-bottom-color: rgb(246, 255, 248);
     border-top-width: 3px;
     border-right-width: 3px;
     border-bottom-width: 3px;
@@ -119,10 +121,10 @@
 }
 
 .running #NodeState {
-    border-left-color: rgb(43, 255, 0);
-    border-right-color: rgb(43, 255, 0);
-    border-top-color: rgb(43, 255, 0);
-    border-bottom-color: rgb(43, 255, 0);
+    border-left-color: rgb(0, 255, 0);
+    border-right-color: rgb(0, 255, 0);
+    border-top-color: rgb(0, 255, 0);
+    border-bottom-color: rgb(0, 255, 0);
     border-top-width: 2px;
     border-right-width: 2px;
     border-bottom-width: 2px;
@@ -136,14 +138,18 @@
     top: 0;
     right: 0;
     bottom: 0;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
 }
 
 .sequence #input {
-    background-color: rgb(255, 160, 0);
+    background-color: rgb(255, 209, 102);
 }
 
 .select #input {
-    background-color: rgb(0, 247, 255);
+    background-color: rgb(17, 138, 178);
 }
 
 #root {
