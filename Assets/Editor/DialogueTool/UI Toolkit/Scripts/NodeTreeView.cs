@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 public class NodeTreeView : GraphView
 {
-    private static int index = 0;
+    private static int index = 1;
     private string DialogueTree_Save_Path = "Assets/Game Data/ScriptableObject/Dialogue/";
     private DialogueNodeTree nodeTree;
     public Action<NodeView> OnNodeSelected;
@@ -33,24 +33,16 @@ public class NodeTreeView : GraphView
         Undo.undoRedoPerformed += OnUndoRedo;
     }
 
+    /// <summary>
+    /// 创建右键菜单
+    /// </summary>
+    /// <param name="evt"></param>
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
     {
         if (nodeTree == null)
         {
-            evt.menu.AppendAction("Create New DialogueTree", (action) =>
-            {
-                if (!Directory.Exists(DialogueTree_Save_Path))
-                {
-                    Directory.CreateDirectory(DialogueTree_Save_Path);
-                }
-
-                nodeTree = ScriptableObject.CreateInstance<DialogueNodeTree>();
-                AssetDatabase.CreateAsset(nodeTree, DialogueTree_Save_Path + $"New DialogueNodeTree {index++}.asset");
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-                EditorGUIUtility.PingObject(nodeTree);
-                PopulateView(nodeTree);
-            });
+            evt.menu.AppendAction("Create New DialogueTree", _ =>
+            CreateNewDialogueTree());
         }
         else
         {
@@ -63,12 +55,46 @@ public class NodeTreeView : GraphView
                     // 获取当前鼠标位置
                     Vector2 localMousePos = this.ChangeCoordinatesTo(this, evt.localMousePosition);
                     // 遍历 实类结点类型 在右键菜单中添加对应的菜单名
-                    evt.menu.AppendAction($"{type.Name}", (action) => CreateNode(type, localMousePos));
+                    evt.menu.AppendAction($"{type.Name}", action => CreateNode(type, localMousePos));
                 }
             }
         }
 
         base.BuildContextualMenu(evt);
+    }
+
+    /// <summary>
+    /// 创建新的 DialogueTree
+    /// </summary>
+    private void CreateNewDialogueTree()
+    {
+        if (!Directory.Exists(DialogueTree_Save_Path))
+        {
+            Directory.CreateDirectory(DialogueTree_Save_Path);
+        }
+
+        nodeTree = ScriptableObject.CreateInstance<DialogueNodeTree>();
+
+        string filePath = DialogueTree_Save_Path + "New DialogueNodeTree.asset";
+        if (File.Exists(filePath))
+        {
+            index = 1;
+            filePath = DialogueTree_Save_Path + $"New DialogueNodeTree {index}.asset";
+            while (File.Exists(filePath))
+            {
+                filePath = DialogueTree_Save_Path + $"New DialogueNodeTree {++index}.asset";
+            }
+        }
+        else
+        {
+            index = 1;
+        }
+
+        AssetDatabase.CreateAsset(nodeTree, filePath);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        EditorGUIUtility.PingObject(nodeTree);
+        PopulateView(nodeTree);
     }
 
     /// <summary>
@@ -111,6 +137,11 @@ public class NodeTreeView : GraphView
             nodeTree.runningNode = node;
         }
 
+        if (!nodeTree.allNodes.Exists(node => node.GetType() == typeof(RootNode)))
+        {
+            Debug.LogError("Must Create A Root Node");
+        }
+
         if (node != null)
         {
             // 并创建这个结点的视图
@@ -147,7 +178,7 @@ public class NodeTreeView : GraphView
         // 如果当前选择的资源不是 DialogueNodeTree 则不继续向下执行
         if (this.nodeTree == null)
         {
-            nodeTreeName.text = "";
+            nodeTreeName.text = "No DialogueTree Selected";
             return;
         }
 
