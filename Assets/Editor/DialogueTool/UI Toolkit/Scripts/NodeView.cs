@@ -11,9 +11,11 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     public Port input; // 输入端口
     public Port output; // 输出端口
     public Action<NodeView> OnNodeSelected;
+    private NodeTreeView nodeTreeView;
 
-    public NodeView(BaseNode node) : base("Assets/Editor/DialogueTool/UI Toolkit/UI/NodeView.uxml")
+    public NodeView(BaseNode node, NodeTreeView nodeTreeView) : base("Assets/Editor/DialogueTool/UI Toolkit/UI/NodeView.uxml")
     {
+        this.nodeTreeView = nodeTreeView;
         this.node = node;
         this.title = node.name;
         this.viewDataKey = node.guid;
@@ -37,7 +39,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         VisualElement input = this.Q<VisualElement>("input");
         root.style.display = DisplayStyle.None;
         input.style.display = DisplayStyle.None;
-        if (node is RootNode)
+        if (node.isRootNode)
         {
             AddToClassList("root");
             root.style.display = DisplayStyle.Flex;
@@ -66,12 +68,12 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         // 端口数据类型 typeof(bool)
         // 默认所有节点为多入口类型
         input = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(bool));
-        if (node is SequenceNode)
-        {
-            input = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
-        }
+        //if (node is SequenceNode)
+        //{
+        //    input = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
+        //}
 
-        if (node is RootNode)
+        if (node.isRootNode)
         {
             input = null;
         }
@@ -164,5 +166,60 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
                     break;
             }
         }
+    }
+
+    /// <summary>
+    /// 设置根节点
+    /// </summary>
+    public void SetRootNode(bool rootNode)
+    {
+        this.node.isRootNode = rootNode;
+
+        if (rootNode)
+        {
+            BaseNode tempNode = nodeTreeView.nodeTree.allNodes.Find(node => node.isRootNode == true && node != this.node);
+            if (tempNode != null)
+            {
+                tempNode.isRootNode = false;
+            }
+            if (input.connections != null)
+            {
+                foreach (Edge edge in input.connections)
+                {
+                    var connectedNode = edge.output.node as NodeView;
+                    if (connectedNode.node.GetType() == typeof(SequenceNode))
+                    {
+                        (connectedNode.node as SequenceNode).child = null;
+                    }
+                    else if (connectedNode.node.GetType() == typeof(SelectNode))
+                    {
+                        (connectedNode.node as SelectNode).childs.Remove(this.node);
+                    }
+                }
+            }
+            nodeTreeView.SetRootNode(this.node);
+        }
+
+        nodeTreeView.PopulateView(nodeTreeView.nodeTree);
+    }
+
+    public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+    {
+        if (node != null && !node.isRootNode)
+        {
+            evt.menu.AppendAction("Set RootNode", _ =>
+            {
+                SetRootNode(true);
+            });
+        }
+        else if (node != null && node.isRootNode)
+        {
+            evt.menu.AppendAction("Set NormalNode", _ =>
+            {
+                SetRootNode(false);
+            });
+        }
+
+        base.BuildContextualMenu(evt);
     }
 }

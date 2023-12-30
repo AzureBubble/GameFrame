@@ -92,11 +92,7 @@ public class DialogueNodeTree : ScriptableObject
         // 撤销前 记录操作
         Undo.RecordObject(parent, "NodeTree (RemoveChild)");
 
-        if (parent.GetType() == typeof(RootNode))
-        {
-            (parent as RootNode).child = null;
-        }
-        else if (parent.GetType() == typeof(SequenceNode))
+        if (parent.GetType() == typeof(SequenceNode))
         {
             (parent as SequenceNode).child = null;
         }
@@ -118,11 +114,7 @@ public class DialogueNodeTree : ScriptableObject
         // 撤销前 记录操作
         Undo.RecordObject(parent, "NodeTree (AddChild)");
 
-        if (parent.GetType() == typeof(RootNode))
-        {
-            (parent as RootNode).child = child;
-        }
-        else if (parent.GetType() == typeof(SequenceNode))
+        if (parent.GetType() == typeof(SequenceNode))
         {
             (parent as SequenceNode).child = child;
         }
@@ -136,15 +128,7 @@ public class DialogueNodeTree : ScriptableObject
 
     public List<BaseNode> GetChildren(BaseNode parent)
     {
-        if (parent.GetType() == typeof(RootNode))
-        {
-            RootNode tempParent = parent as RootNode;
-            if (tempParent.child != null)
-            {
-                return new List<BaseNode> { tempParent.child };
-            }
-        }
-        else if (parent.GetType() == typeof(SequenceNode))
+        if (parent.GetType() == typeof(SequenceNode))
         {
             SequenceNode tempParent = parent as SequenceNode;
             if (tempParent.child != null)

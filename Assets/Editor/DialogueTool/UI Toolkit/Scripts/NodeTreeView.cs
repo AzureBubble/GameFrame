@@ -11,7 +11,7 @@ public class NodeTreeView : GraphView
 {
     private static int index = 1;
     private string DialogueTree_Save_Path = "Assets/Game Data/ScriptableObject/Dialogue/";
-    private DialogueNodeTree nodeTree;
+    public DialogueNodeTree nodeTree;
     public Action<NodeView> OnNodeSelected;
     private VisualElement titleDiv;
 
@@ -97,6 +97,12 @@ public class NodeTreeView : GraphView
         PopulateView(nodeTree);
     }
 
+    public void SetRootNode(BaseNode rootNode)
+    {
+        nodeTree.rootNode = rootNode;
+        nodeTree.runningNode = rootNode;
+    }
+
     /// <summary>
     /// 撤销重做
     /// </summary>
@@ -118,26 +124,13 @@ public class NodeTreeView : GraphView
             return;
         }
 
-        if (type == typeof(RootNode) && nodeTree.allNodes.Find((node) =>
-            node.GetType() == typeof(RootNode)))
-        {
-            Debug.LogWarning("There can be only one root node");
-            return;
-        }
-
         // 创建一个结点
         BaseNode node = nodeTree.CreateNode(type);
 
         // 设置节点位置
         node.position = mousePos;
 
-        if (node is RootNode)
-        {
-            nodeTree.rootNode = node;
-            nodeTree.runningNode = node;
-        }
-
-        if (!nodeTree.allNodes.Exists(node => node.GetType() == typeof(RootNode)))
+        if (!nodeTree.allNodes.Exists(node => node.isRootNode == true))
         {
             Debug.LogError("Must Create A Root Node");
         }
@@ -155,7 +148,7 @@ public class NodeTreeView : GraphView
     /// <param name="node"></param>
     private void CreateNodeView(BaseNode node)
     {
-        NodeView nodeView = new NodeView(node); // 创建一个视图结点
+        NodeView nodeView = new NodeView(node, this); // 创建一个视图结点
         nodeView.OnNodeSelected = OnNodeSelected;
         AddElement(nodeView); // 添加到 nodeTree 视图中添加这个结点视图
     }
@@ -206,6 +199,11 @@ public class NodeTreeView : GraphView
                 });
             }
         });
+    }
+
+    public void RepaintNodeTreeView()
+    {
+        PopulateView(nodeTree);
     }
 
     /// <summary>
