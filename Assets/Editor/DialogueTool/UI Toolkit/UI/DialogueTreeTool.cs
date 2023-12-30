@@ -70,17 +70,18 @@ public class DialogueTreeTool : EditorWindow
         inspectorView.UpdateSelection(view);
     }
 
+    private DialogueNodeTree tree;
+
     /// <summary>
     /// Project窗口中选择项变换时执行的操作
     /// </summary>
     private void OnSelectionChange()
     {
-        DialogueNodeTree tree = null;
         if (Selection.activeObject is DialogueNodeTree)
         {
             tree = Selection.activeObject as DialogueNodeTree;
         }
-        else
+        else if (!Application.isPlaying)
         {
             tree = null;
         }
