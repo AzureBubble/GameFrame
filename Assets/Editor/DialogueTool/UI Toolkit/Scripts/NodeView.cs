@@ -177,11 +177,6 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
 
         if (rootNode)
         {
-            BaseNode tempNode = nodeTreeView.nodeTree.allNodes.Find(node => node.isRootNode == true && node != this.node);
-            if (tempNode != null)
-            {
-                tempNode.isRootNode = false;
-            }
             if (input.connections != null)
             {
                 foreach (Edge edge in input.connections)
@@ -199,8 +194,10 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
             }
             nodeTreeView.SetRootNode(this.node);
         }
-
-        nodeTreeView.PopulateView(nodeTreeView.nodeTree);
+        else
+        {
+            nodeTreeView.SetRootNode(null);
+        }
     }
 
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)

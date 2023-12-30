@@ -11,7 +11,7 @@ public class NodeTreeView : GraphView
 {
     private static int index = 1;
     private string DialogueTree_Save_Path = "Assets/Game Data/ScriptableObject/Dialogue/";
-    public DialogueNodeTree nodeTree;
+    private DialogueNodeTree nodeTree;
     public Action<NodeView> OnNodeSelected;
     private VisualElement titleDiv;
 
@@ -101,6 +101,14 @@ public class NodeTreeView : GraphView
     {
         nodeTree.rootNode = rootNode;
         nodeTree.runningNode = rootNode;
+
+        BaseNode originalRootNode = nodeTree.allNodes.Find(node => node.isRootNode == true && node != rootNode);
+        if (originalRootNode != null)
+        {
+            originalRootNode.isRootNode = false;
+        }
+
+        PopulateView(nodeTree);
     }
 
     /// <summary>
