@@ -144,6 +144,36 @@
     padding-left: 5px;
 }
 
+.success #NodeState {
+    border-left-color: rgb(0, 255, 0);
+    border-right-color: rgba(0, 255, 0, 0);
+    border-top-color: rgba(0, 255, 0, 0);
+    border-bottom-color: rgba(0, 255, 0, 0);
+    border-top-width: 4px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
+    border-left-width: 4px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.failure #NodeState {
+    border-left-color: rgb(255, 0, 0);
+    border-right-color: rgb(255, 0, 0);
+    border-top-color: rgb(255, 0, 0);
+    border-bottom-color: rgb(255, 0, 0);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
 .sequence #input {
     background-color: rgb(255, 209, 102);
 }

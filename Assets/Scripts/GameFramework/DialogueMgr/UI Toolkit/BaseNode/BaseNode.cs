@@ -2,12 +2,13 @@ using UnityEngine;
 
 public abstract class BaseNode : ScriptableObject
 {
+    [ReadOnly] public string guid; // 唯一标识
+    [ReadOnly] public Vector2 position; // 结点位置坐标
+    [ReadOnly] public bool isExcute = false; // 是否执行
+    [ReadOnly] public bool isRootNode;
+
     public E_NodeState state = E_NodeState.Waiting;// 结点初始状态为等待执行
     [TextArea] public string description;
-    [HideInInspector] public bool isExcute = false; // 是否执行
-    [HideInInspector] public bool isRootNode;
-    [HideInInspector] public string guid; // 唯一标识
-    [HideInInspector] public Vector2 position; // 结点位置坐标
     public Sprite headIcon; // 头像
     public string speakerName; // 名字
 
@@ -18,7 +19,7 @@ public abstract class BaseNode : ScriptableObject
             OnEnter();
             isExcute = true;
         }
-        BaseNode node = Execute();
+        BaseNode node = Excute();
         if (state != E_NodeState.Running)
         {
             OnExit();
@@ -36,7 +37,7 @@ public abstract class BaseNode : ScriptableObject
     /// 执行逻辑的方法
     /// </summary>
     /// <returns></returns>
-    public abstract BaseNode Execute();
+    public abstract BaseNode Excute();
 
     /// <summary>
     /// 结点退出

@@ -14,7 +14,7 @@ public class SequenceNode : BaseNode
         Debug.Log(dialogueContent);
     }
 
-    public override BaseNode Execute()
+    public override BaseNode Excute()
     {
         if (Input.GetKeyDown(KeyCode.N))
         {

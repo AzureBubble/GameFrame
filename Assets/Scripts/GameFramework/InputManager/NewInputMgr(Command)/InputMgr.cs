@@ -30,7 +30,7 @@ namespace GameFramework.GFInputManager
             // 如果不监听输入 则直接返回 不再监听键盘输入
             if (!canInput) return;
 
-            // 循环遍历列表中的命令 并执行命令的 Execute 方法
+            // 循环遍历列表中的命令 并执行命令的 Excute 方法
             foreach (ICommand command in commands)
             {
                 command?.Execute();

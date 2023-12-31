@@ -81,7 +81,8 @@ public class DialogueTreeTool : EditorWindow
         {
             tree = Selection.activeObject as DialogueNodeTree;
         }
-        else if (!Application.isPlaying)
+
+        if (Selection.activeObject is not DialogueNodeTree && !Application.isPlaying)
         {
             tree = null;
         }
