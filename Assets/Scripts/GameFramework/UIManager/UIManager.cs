@@ -84,7 +84,10 @@ namespace GameFramework.GFUIManager
 
             if (panelDic.ContainsKey(panelName))
             {
-                panelDic[panelName].ShowMe();
+                if (!panelDic[panelName].gameObject.activeSelf)
+                {
+                    panelDic[panelName].ShowMe();
+                }
                 callback?.Invoke(panelDic[panelName] as T);
                 return;
             }
@@ -144,7 +147,7 @@ namespace GameFramework.GFUIManager
         public void HidePanel<T>(bool isFade = true, bool isDestory = true) where T : BasePanel
         {
             string panelName = typeof(T).Name;
-            if (panelDic.ContainsKey(panelName))
+            if (panelDic.ContainsKey(panelName) && panelDic[panelName].gameObject.activeSelf)
             {
                 if (isFade)
                 {
