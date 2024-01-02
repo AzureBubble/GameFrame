@@ -1,17 +1,17 @@
 using System;
 
 /// <summary>
-/// ÆÕÍ¨µ¥Àı
+/// æ™®é€šå•ä¾‹
 /// </summary>
 public interface ISingleton : IDisposable
 {
     /// <summary>
-    ///  ±ê¼Çµ¥ÀıÊÇ·ñ±»Ïú»Ù
+    ///  æ ‡è®°å•ä¾‹æ˜¯å¦è¢«é”€æ¯
     /// </summary>
     public bool IsDisposed { get; set; }
 
     /// <summary>
-    /// µ¥Àı³õÊ¼»¯·½·¨
+    /// å•ä¾‹åˆå§‹åŒ–æ–¹æ³•
     /// </summary>
     public void Initialize();
 }

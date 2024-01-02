@@ -186,6 +186,7 @@ namespace GameFramework.GFUIManager
         /// </summary>
         public virtual void ShowMe(UnityAction callback = null, float targetAlpha = 1f)
         {
+            this.gameObject.SetActive(true);
             isShow = true;
             canvasGroup.alpha = 0f;
             canvasGroup.interactable = false;
@@ -208,17 +209,17 @@ namespace GameFramework.GFUIManager
         /// <summary>
         /// 画布淡入
         /// </summary>
-        public virtual void FadeIn(float targetAlpha = 1f)
+        public virtual void FadeIn(float targetAlpha)
         {
-            StartCoroutine(FadeInAsync(targetAlpha));
+            StartCoroutine(FadeInAndOutAsync(targetAlpha));
         }
 
         /// <summary>
         /// 画布淡出
         /// </summary>
-        public virtual void FadeOut(float targetAlpha = 0f)
+        public virtual void FadeOut(float targetAlpha)
         {
-            StartCoroutine(FadeInAsync(targetAlpha));
+            StartCoroutine(FadeInAndOutAsync(targetAlpha));
         }
 
         /// <summary>
@@ -226,7 +227,7 @@ namespace GameFramework.GFUIManager
         /// </summary>
         /// <param name="targetAlpha"></param>
         /// <returns></returns>
-        private IEnumerator FadeInAsync(float targetAlpha)
+        private IEnumerator FadeInAndOutAsync(float targetAlpha)
         {
             while (Mathf.Abs(canvasGroup.alpha - targetAlpha) > 0.05f)
             {

@@ -4,9 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.ComponentModel;
+using UnityEngine.Events;
 
 /// <summary>
-/// ¹ÜÀíÈ«¾ÖµÄ Singleton
+/// ç®¡ç†å…¨å±€çš„ Singleton
 /// </summary>
 public static class SingletonManager
 {
@@ -16,7 +17,7 @@ public static class SingletonManager
     private static MonoController monoController;
 
     /// <summary>
-    /// ³õÊ¼»¯ Singleton ¹ÜÀíÆ÷
+    /// åˆå§‹åŒ– Singleton ç®¡ç†å™¨
     /// </summary>
     public static void Initialize()
     {
@@ -29,7 +30,7 @@ public static class SingletonManager
     }
 
     /// <summary>
-    /// Ö¡¸üĞÂ·½·¨
+    /// å¸§æ›´æ–°æ–¹æ³•
     /// </summary>
     public static void OnUpdate()
     {
@@ -43,7 +44,7 @@ public static class SingletonManager
     }
 
     /// <summary>
-    /// ´´½¨µ¥Àı¶ÔÏó
+    /// åˆ›å»ºå•ä¾‹å¯¹è±¡
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
@@ -71,7 +72,7 @@ public static class SingletonManager
     }
 
     /// <summary>
-    /// »ñÈ¡µ¥Àı
+    /// è·å–å•ä¾‹
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
@@ -95,7 +96,7 @@ public static class SingletonManager
     }
 
     /// <summary>
-    /// ÊÇ·ñ´æÔÚÆÕÍ¨µ¥Àı
+    /// æ˜¯å¦å­˜åœ¨æ™®é€šå•ä¾‹
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
@@ -106,12 +107,12 @@ public static class SingletonManager
             return true;
         }
 
-        Debug.Log($"²»´æÔÚ{typeof(T)}µ¥Àı¶ÔÏó");
+        Debug.Log($"ä¸å­˜åœ¨{typeof(T)}å•ä¾‹å¯¹è±¡");
         return false;
     }
 
     /// <summary>
-    /// ÊÇ·ñ´æÔÚ UpdateSingleton
+    /// æ˜¯å¦å­˜åœ¨ UpdateSingleton
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
@@ -125,15 +126,15 @@ public static class SingletonManager
             }
         }
 
-        Debug.Log($"²»´æÔÚ{typeof(T)}Updateµ¥Àı¶ÔÏó");
+        Debug.Log($"ä¸å­˜åœ¨{typeof(T)}Updateå•ä¾‹å¯¹è±¡");
         return false;
     }
 
     /// <summary>
-    /// É¾³ıÄ³Ò»ÌØ¶¨µ¥Àı¶ÔÏó
+    /// åˆ é™¤æŸä¸€ç‰¹å®šå•ä¾‹å¯¹è±¡
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="isUpdateSingleton">ÊÇ·ñÊÇUpdateµÄµ¥Àı¶ÔÏó</param>
+    /// <param name="isUpdateSingleton">æ˜¯å¦æ˜¯Updateçš„å•ä¾‹å¯¹è±¡</param>
     /// <returns></returns>
     public static bool DestorySingleton<T>(bool isUpdateSingleton = false) where T : class, ISingleton
     {
@@ -153,7 +154,41 @@ public static class SingletonManager
         return false;
     }
 
-    #region ¿ªÆôĞ­³Ì
+    #region Monoå£°æ˜å‘¨æœŸå‡½æ•°ç›‘å¬
+
+    public static void AddUpdateListener(UnityAction action)
+    {
+        monoController.AddUpdateListener(action);
+    }
+
+    public static void RemoveUpdateListener(UnityAction action)
+    {
+        monoController.RemoveUpdateListener(action);
+    }
+
+    public static void AddFixedUpdateListener(UnityAction action)
+    {
+        monoController.AddFixedUpdateListener(action);
+    }
+
+    public static void RemoveFixedUpdateListener(UnityAction action)
+    {
+        monoController.RemoveFixedUpdateListener(action);
+    }
+
+    public static void AddLateUpdateListener(UnityAction action)
+    {
+        monoController.AddLateUpdateListener(action);
+    }
+
+    public static void RemoveLateUpdateListener(UnityAction action)
+    {
+        monoController.RemoveLateUpdateListener(action);
+    }
+
+    #endregion
+
+    #region å¼€å¯åç¨‹
 
     public static Coroutine StartCoroutine(IEnumerator coroutine)
     {
@@ -172,7 +207,7 @@ public static class SingletonManager
 
     #endregion
 
-    #region Í£Ö¹Ğ­³Ì
+    #region åœæ­¢åç¨‹
 
     public static void StopCoroutine(IEnumerator coroutine)
     {
@@ -197,7 +232,7 @@ public static class SingletonManager
     #endregion
 
     /// <summary>
-    /// Ïú»ÙËùÓĞµ¥Àı
+    /// é”€æ¯æ‰€æœ‰å•ä¾‹
     /// </summary>
     private static void DestoryAllSingleton()
     {
@@ -208,7 +243,7 @@ public static class SingletonManager
     }
 
     /// <summary>
-    /// Ïú»Ùµ¥Àı¹ÜÀíÆ÷
+    /// é”€æ¯å•ä¾‹ç®¡ç†å™¨
     /// </summary>
     public static void Dispose()
     {

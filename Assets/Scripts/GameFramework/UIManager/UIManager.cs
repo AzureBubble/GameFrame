@@ -138,8 +138,10 @@ namespace GameFramework.GFUIManager
         /// <summary>
         /// 隐藏面板
         /// </summary>
-        /// <typeparam name="T">面板类型</typeparam>
-        public void HidePanel<T>(bool isFade = true) where T : BasePanel
+        /// <typeparam name="T"></typeparam>
+        /// <param name="isFade">是否淡入淡出</param>
+        /// <param name="isDestory">是否销毁面板</param>
+        public void HidePanel<T>(bool isFade = true, bool isDestory = true) where T : BasePanel
         {
             string panelName = typeof(T).Name;
             if (panelDic.ContainsKey(panelName))
@@ -148,14 +150,28 @@ namespace GameFramework.GFUIManager
                 {
                     panelDic[panelName].HideMe(() =>
                     {
-                        GameObject.Destroy(panelDic[panelName].gameObject);
-                        panelDic.Remove(panelName);
+                        if (isDestory)
+                        {
+                            GameObject.Destroy(panelDic[panelName].gameObject);
+                            panelDic.Remove(panelName);
+                        }
+                        else
+                        {
+                            panelDic[panelName].gameObject.SetActive(false);
+                        }
                     });
                 }
                 else
                 {
-                    GameObject.Destroy(panelDic[panelName].gameObject);
-                    panelDic.Remove(panelName);
+                    if (isDestory)
+                    {
+                        GameObject.Destroy(panelDic[panelName].gameObject);
+                        panelDic.Remove(panelName);
+                    }
+                    else
+                    {
+                        panelDic[panelName].gameObject.SetActive(false);
+                    }
                 }
             }
         }

@@ -1,10 +1,10 @@
 /// <summary>
-/// ĞèÒªÖ¡¸üĞÂµÄµ¥Àı
+/// éœ€è¦å¸§æ›´æ–°çš„å•ä¾‹
 /// </summary>
 public interface IUpdateSingleton : ISingleton
 {
     /// <summary>
-    /// Ö¡¸üĞÂ·½·¨
+    /// å¸§æ›´æ–°æ–¹æ³•
     /// </summary>
     abstract void OnUpdate();
 }
