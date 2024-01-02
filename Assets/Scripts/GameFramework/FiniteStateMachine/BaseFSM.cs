@@ -1,17 +1,20 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameFramework.StateMachine
 {
-    /// <summary>
-    /// 状态机基类
-    /// </summary>
-    public class BaseFSM : MonoBehaviour
+    public class BaseFsm
     {
+        /// <summary>
+		/// 状态机持有者
+		/// </summary>
+        public System.Object Owner { private set; get; }
+
         /// <summary>
         /// 状态机字典
         /// </summary>
-        private Dictionary<E_State_Type, IState> stateDict = new Dictionary<E_State_Type, IState>(50);
+        private Dictionary<string, IState> stateDict = new Dictionary<string, IState>(50);
 
         /// <summary>
         /// 黑板 共享数据信息
@@ -28,52 +31,118 @@ namespace GameFramework.StateMachine
             get { return currentState; }
         }
 
-        protected virtual void Awake()
+        private BaseFsm()
+        { }
+
+        public BaseFsm(System.Object owner)
         {
-            // 初始化状态机方法
-            Init();
+            Owner = owner;
         }
 
-        protected virtual void Update()
+        /// <summary>
+        /// 状态机帧更新
+        /// </summary>
+        public void Update()
         {
             // 当前状态更新
             currentState?.OnUpdate();
         }
 
-        /// <summary>
-        /// 初始化状态机方法
-        /// </summary>
-        protected virtual void Init()
-        {
-        }
-
-        #region 启动状态
+        #region 启动状态 切换状态
 
         /// <summary>
         /// 启动状态
         /// </summary>
-        /// <param name="newState">新状态</param>
-        protected void StateOn(E_State_Type newState)
+        public void StateOn<K>() where K : IState
         {
-            if (stateDict.TryGetValue(newState, out currentState))
+            StateOn(typeof(K).FullName);
+        }
+
+        /// <summary>
+        /// 启动状态
+        /// </summary>
+        public void StateOn(Type stateType)
+        {
+            StateOn(stateType.FullName);
+        }
+
+        /// <summary>
+        /// 启动状态
+        /// </summary>
+        public void StateOn(string stateName)
+        {
+            if (stateDict.TryGetValue(stateName, out currentState))
             {
                 currentState?.OnEnter();
             }
             else
             {
-                Debug.Log($"不存在{newState}状态");
+                Debug.Log($"No Found State : {stateName}");
             }
         }
 
         /// <summary>
         /// 切换状态
         /// </summary>
-        /// <param name="newState">新状态</param>
-        public void SwitchState(E_State_Type newState)
+        public void SwitchState<K>() where K : IState
         {
             currentState?.OnExit();
 
-            StateOn(newState);
+            StateOn<K>();
+        }
+
+        /// <summary>
+        /// 切换状态
+        /// </summary>
+        public void SwitchState(Type stateType)
+        {
+            currentState?.OnExit();
+            StateOn(stateType);
+        }
+
+        /// <summary>
+        /// 切换状态
+        /// </summary>
+        /// <param name="stateName">新状态名</param>
+        public void SwitchState(string stateName)
+        {
+            currentState?.OnExit();
+            StateOn(stateName);
+        }
+
+        #endregion
+
+        #region 添加状态
+
+        /// <summary>
+        /// 添加状态结点
+        /// </summary>
+        /// <param name="stateType">状态类型</param>
+        /// <param name="state">状态</param>
+        public void AddState<K>() where K : IState
+        {
+            var state = Activator.CreateInstance<K>() as IState;
+            AddState(state);
+        }
+
+        /// <summary>
+        /// 添加状态结点
+        /// </summary>
+        /// <param name="stateType">状态类型</param>
+        /// <param name="state">状态</param>
+        public void AddState(IState state)
+        {
+            var type = state.GetType();
+
+            if (!stateDict.ContainsKey(type.FullName))
+            {
+                stateDict.Add(type.FullName, state);
+                state.OnCreate(this);
+            }
+            else
+            {
+                Debug.LogError($"State has already existed : {type.FullName}");
+            }
         }
 
         #endregion

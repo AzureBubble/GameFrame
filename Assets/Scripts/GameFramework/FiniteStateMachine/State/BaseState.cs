@@ -8,12 +8,11 @@ namespace GameFramework.StateMachine
     /// </summary>
     public abstract class BaseState : IState
     {
-        public readonly E_State_Type stateType; // 状态类型
-        protected readonly string stateName; // 状态对应的 Animation 动画名称
-        protected readonly float switchAnimationDuration = 0.1f; // 动画切换过渡时间
+        protected string stateName; // 状态对应的 Animation 动画名称
+        protected float switchAnimationDuration = 0.1f; // 动画切换过渡时间
         protected int stateHash; // 状态对应的动画哈希值
         protected Animator animator; // Animator组件
-        protected BaseFSM fsm; // 状态机
+        protected BaseFsm fsm; // 状态机
         protected float CurrentInfoTime => animator.GetCurrentAnimatorStateInfo(0).normalizedTime; // 当前动画状态的归一化时间
 
         protected float CurrentAnimationTime // 当前动画状态的播放时间
@@ -33,15 +32,24 @@ namespace GameFramework.StateMachine
         /// </summary>
         /// <param name="animator"></param>
         /// <param name="fsm"></param>
-        public void Init(Animator animator, BaseFSM fsm)
+        public abstract void Init();
+
+        public void OnCreate(BaseFsm fsm)
         {
-            this.animator = animator;
             this.fsm = fsm;
+            this.animator = fsm.GetBlackboardValue("Animator") as Animator;
+
             // 通过状态对应的动画名字获得其在动画系统中的哈希值
             stateHash = Animator.StringToHash(stateName);
+
+            Init();
         }
 
-        public abstract void OnEnter();
+        public virtual void OnEnter()
+        {
+            // 过度切换动画(动画哈希值，动画融合时间)
+            animator.CrossFade(stateHash, switchAnimationDuration);
+        }
 
         public abstract void OnExit();
 

@@ -6,6 +6,8 @@ namespace GameFramework.StateMachine
     /// </summary>
     public interface IState
     {
+        void OnCreate(BaseFsm fsm);
+
         /// <summary>
         /// 状态进入
         /// </summary>
