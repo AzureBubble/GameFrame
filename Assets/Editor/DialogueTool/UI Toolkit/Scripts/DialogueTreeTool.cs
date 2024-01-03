@@ -67,7 +67,7 @@ public class DialogueTreeTool : EditorWindow
     /// <param name="view"></param>
     private void OnNodeSelectionChanged(NodeView view)
     {
-        inspectorView.UpdateSelection(view);
+        inspectorView?.UpdateSelection(view);
     }
 
     private DialogueNodeTree tree;
@@ -87,7 +87,7 @@ public class DialogueTreeTool : EditorWindow
             tree = null;
         }
 
-        nodeTreeView.PopulateView(tree);
+        nodeTreeView?.PopulateView(tree);
     }
 
     private void OnInspectorUpdate()

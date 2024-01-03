@@ -13,8 +13,33 @@ namespace GameFramework.ObjectPoolManager
         private GameObject parentObj; // 缓存池结点
         private Stack<GameObject> dataStack = new Stack<GameObject>(); // 没有使用的对象池
         private List<GameObject> usedList = new List<GameObject>(); // 使用中的对象池
+        private int maxNum = 50;
         public int Count => dataStack.Count;
         public int UseCount => usedList.Count;
+        public bool NeedCreate => UseCount < maxNum;
+
+        /// <summary>
+        /// 初始化对象池最大容量
+        /// </summary>
+        /// <param name="maxNum">最大容量</param>
+        public void InitObjectPoolMaxNum(int maxNum)
+        {
+            if (this.maxNum == maxNum) return;
+            if (this.maxNum > maxNum)
+            {
+                while (Count > 0 && Count + UseCount > maxNum)
+                {
+                    GameObject.Destroy(dataStack.Pop());
+                }
+                while (UseCount > 0 && Count + UseCount > maxNum)
+                {
+                    GameObject obj = usedList[^1];
+                    GameObject.Destroy(obj);
+                    usedList.Remove(obj);
+                }
+            }
+            this.maxNum = maxNum;
+        }
 
         /// <summary>
         /// 构造函数 创建缓存池管理者对象结点，预制体缓存池结点
@@ -29,6 +54,15 @@ namespace GameFramework.ObjectPoolManager
 
             // 把物体压入已使用记录中
             PushUsedList(obj);
+        }
+
+        public PoolData(string name, int maxNun)
+        {
+            // 创建父节点物体
+            this.parentObj = new GameObject(name + " Pool");
+            // 把父节点物体作为缓存池管理对象的子节点
+            //this.parentObj.transform.SetParent(poolMgr.transform, false);
+            this.maxNum = maxNun;
         }
 
         /// <summary>
@@ -110,12 +144,12 @@ namespace GameFramework.ObjectPoolManager
         /// </summary>
         /// <param name="name">物体名字</param>
         /// <param name="callback">回调函数</param>
-        public void GetObj(string name, UnityAction<GameObject> callback = null, string path = "Prefabs/", int maxNum = 50)
+        public void GetObj(string name, UnityAction<GameObject> callback = null, string path = "Prefabs/")
         {
             // 判断对应的对象池是否存在
-            if (!poolDic.ContainsKey(name) 
-                ||(poolDic[name].Count == 0 
-                && poolDic[name].UseCount < maxNum))
+            if (!poolDic.ContainsKey(name)
+                || (poolDic[name].Count == 0
+                && poolDic[name].NeedCreate))
             {
                 // 异步加载预制体资源
                 ResourcesMgr.Instance.LoadResAsync<GameObject>(path + name, (resObj) =>
@@ -152,6 +186,23 @@ namespace GameFramework.ObjectPoolManager
             else
             {
                 poolDic.Add(name, new PoolData(obj));
+            }
+        }
+
+        /// <summary>
+        /// 初始化对象池
+        /// </summary>
+        /// <param name="name">对象池名称</param>
+        /// <param name="maxNum">对象池最大容量</param>
+        public void CreateObjectPool(string name, int maxNum)
+        {
+            if (!poolDic.ContainsKey(name))
+            {
+                poolDic.Add(name, new PoolData(name, maxNum));
+            }
+            else
+            {
+                poolDic[name].InitObjectPoolMaxNum(maxNum);
             }
         }
 
