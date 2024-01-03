@@ -15,7 +15,7 @@ public class DialogueTreeTool : EditorWindow
     public static void ShowExample()
     {
         DialogueTreeTool wnd = GetWindow<DialogueTreeTool>();
-        wnd.titleContent = new GUIContent("DialogueTool");
+        wnd.titleContent = new GUIContent("DialogueTreeTool");
     }
 
     [OnOpenAsset]

@@ -113,8 +113,9 @@ namespace GameFramework.ObjectPoolManager
         public void GetObj(string name, UnityAction<GameObject> callback = null, string path = "Prefabs/", int maxNum = 50)
         {
             // 判断对应的对象池是否存在
-            if (!poolDic.ContainsKey(name) ||
-                (poolDic[name].Count == 0 && poolDic[name].UseCount < maxNum))
+            if (!poolDic.ContainsKey(name) 
+                ||(poolDic[name].Count == 0 
+                && poolDic[name].UseCount < maxNum))
             {
                 // 异步加载预制体资源
                 ResourcesMgr.Instance.LoadResAsync<GameObject>(path + name, (resObj) =>
