@@ -1,4 +1,6 @@
-﻿public class BTParallelNode : BTControlNode
+﻿using System;
+
+public class BTParallelNode : BTControlNode
 {
     public int successPolicyCount;
     public int failurePolicyCount;
@@ -10,15 +12,20 @@
         failurePolicyCount = FailurePolicyCount;
         successPolicyCount = SuccessPolicyCount;
 
-        onUpdate += Update;
-        onTerminate += Terminate;
+        AddOnEnterEvent(OnEnter);
+        AddOnUpdateEvent(OnUpdate);
+        AddOnExitEvent(OnExit);
     }
 
-    public virtual E_BT_StateType Update()
+    private void OnEnter()
+    {
+    }
+
+    public virtual E_BT_StateType OnUpdate()
     {
         for (int i = 0; i < childs.Count; i++)
         {
-            if (!childs[i].IsTerminated())
+            if (!childs[i].IsExit())
             {
                 childs[i].Tick();
             }
@@ -46,7 +53,7 @@
         return E_BT_StateType.Running;
     }
 
-    public virtual void Terminate(E_BT_StateType status) //终止所有运行中的子节点
+    public virtual void OnExit(E_BT_StateType status) //终止所有运行中的子节点
     {
         for (int i = 0; i < childs.Count; i++)
         {

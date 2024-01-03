@@ -9,7 +9,7 @@ namespace GameFramework.StateMachine
         /// <summary>
 		/// 状态机持有者
 		/// </summary>
-        public System.Object Owner { private set; get; }
+        public System.Object Entity { private set; get; }
 
         /// <summary>
         /// 状态机字典
@@ -34,9 +34,9 @@ namespace GameFramework.StateMachine
         private BaseFsm()
         { }
 
-        public BaseFsm(System.Object owner)
+        public BaseFsm(System.Object entity)
         {
-            Owner = owner;
+            Entity = entity;
         }
 
         /// <summary>

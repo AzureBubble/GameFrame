@@ -1,3 +1,5 @@
+using System;
+
 /// <summary>
 /// 1.顺序器(And-&):按照设计顺序执行子节点行为直到所有子节点全部完成或者到某一个失败为止
 /// </summary>
@@ -5,21 +7,23 @@ public class BTSequenceNode : BTControlNode
 {
     public BTSequenceNode()
     {
-        onInitialize += Initialize;
-        onUpdate += Update;
+        AddOnEnterEvent(OnEnter);
+        AddOnUpdateEvent(OnUpdate);
+        AddOnExitEvent(OnExit);
     }
 
-    private void Initialize()
+    private void OnEnter()
     {
+        nowIndex = 0;
     }
 
-    private E_BT_StateType Update()
+    private E_BT_StateType OnUpdate()
     {
-        E_BT_StateType nowState = E_BT_StateType.Waiting;
+        E_BT_StateType childState = E_BT_StateType.Waiting;
         if (nowIndex < childs.Count)
         {
-            nowState = childs[nowIndex].Tick();
-            switch (nowState)
+            childState = childs[nowIndex].Tick();
+            switch (childState)
             {
                 case E_BT_StateType.Success:
                     {
@@ -27,6 +31,7 @@ public class BTSequenceNode : BTControlNode
                         if (nowIndex == childs.Count)
                         {
                             nowIndex = 0;
+                            state = E_BT_StateType.Success;
                             return E_BT_StateType.Success;
                         }
                         break;
@@ -34,13 +39,21 @@ public class BTSequenceNode : BTControlNode
 
                 case E_BT_StateType.Failure:
                     nowIndex = 0;
+                    state = E_BT_StateType.Failure;
                     return E_BT_StateType.Failure;
 
                 default:
-                    return nowState;
+                    state = E_BT_StateType.Running;
+                    return childState;
             }
         }
 
-        return E_BT_StateType.Success;
+        // 否则当前结点还处于执行状态
+        state = E_BT_StateType.Running;
+        return E_BT_StateType.Running;
+    }
+
+    private void OnExit(E_BT_StateType type)
+    {
     }
 }

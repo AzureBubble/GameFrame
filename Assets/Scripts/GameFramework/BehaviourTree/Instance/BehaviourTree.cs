@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,32 +8,46 @@ using UnityEngine;
 public class BehaviourTree : ScriptableObject
 {
     /// <summary>
-    /// 行为树持有者
+    /// 行为树持有者实体对象
     /// </summary>
-    public GameObject Owner { private set; get; }
+    public System.Object Entity { private set; get; }
 
     /// <summary>
     /// 黑板 共享数据信息
     /// </summary>
     private Dictionary<string, System.Object> blackboardDict = new Dictionary<string, System.Object>(50);
 
-    public BTBaseNode rootNode;
+    public BTBaseNode rootNode; // 行为树根节点
     public BTBaseNode runningNode;
-    public List<BTBaseNode> allNodes = new List<BTBaseNode>();
+    public List<BTBaseNode> allNodes = new List<BTBaseNode>(); // 行为树所有节点数据
 
-    public virtual void OnTreeStart(GameObject owner)
+    /// <summary>
+    /// 行为树启动事件
+    /// </summary>
+    /// <param name="entity">行为树拥有者实体对象</param>
+    public virtual void OnTreeStart(System.Object entity)
     {
-        Owner = owner;
+        this.Entity = entity;
         runningNode = rootNode;
     }
 
+    /// <summary>
+    /// 行为树帧更新事件
+    /// </summary>
     public virtual void OnUpdate()
     {
         rootNode?.Tick();
     }
 
+    /// <summary>
+    /// 行为树终止
+    /// </summary>
     public virtual void OnTreeStop()
     {
+        foreach (BTBaseNode item in allNodes)
+        {
+            item.Abort();
+        }
     }
 
     /// <summary>
@@ -45,7 +58,7 @@ public class BehaviourTree : ScriptableObject
     {
         foreach (BTBaseNode item in allNodes)
         {
-            item.OnCreate(this.Owner, this);
+            item.OnCreate(this.Entity, this);
             yield return null;
         }
     }
@@ -88,6 +101,8 @@ public class BehaviourTree : ScriptableObject
     }
 
     #endregion
+
+    #region 编辑器模式功能
 
 #if UNITY_EDITOR
 
@@ -189,4 +204,6 @@ public class BehaviourTree : ScriptableObject
     }
 
 #endif
+
+    #endregion
 }

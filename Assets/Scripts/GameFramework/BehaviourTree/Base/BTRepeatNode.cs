@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class BTRepeatNode : BTDecoratorNode
 {
@@ -7,16 +8,17 @@ public class BTRepeatNode : BTDecoratorNode
 
     public BTRepeatNode()
     {
-        onInitialize += Initialize;
-        onUpdate += Update;
+        AddOnEnterEvent(OnEnter);
+        AddOnUpdateEvent(OnUpdate);
+        AddOnExitEvent(OnExit);
     }
 
-    private void Initialize()
+    private void OnEnter()
     {
         counter = 0;
     }
 
-    private E_BT_StateType Update()
+    private E_BT_StateType OnUpdate()
     {
         for (; ; )
         {
@@ -30,5 +32,9 @@ public class BTRepeatNode : BTDecoratorNode
             child.ResetState();
         }
         return E_BT_StateType.Waiting;
+    }
+
+    private void OnExit(E_BT_StateType type)
+    {
     }
 }
