@@ -1,2 +1,0 @@
-************* MonoManager 使用文档 *************
-就是为了给没有继承 MonoBehaviour 的类使用 MonoBehaviour 的生命周期函数

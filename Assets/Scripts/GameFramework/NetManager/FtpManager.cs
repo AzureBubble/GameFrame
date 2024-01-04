@@ -10,6 +10,62 @@ namespace GameFramework.NetManager
 {
     public class FtpManager : Singleton<FtpManager>
     {
+        private event UnityAction<float> downLoadAction;
+
+        private event UnityAction<float> upLoadFileAction;
+
+        #region 添加上传下载事件
+
+        /// <summary>
+        /// 添加下载文件事件
+        /// </summary>
+        /// <param name="action"></param>
+        public void AddDownloadEvent(UnityAction<float> action)
+        {
+            if (action != null)
+            {
+                downLoadAction += action;
+            }
+        }
+
+        /// <summary>
+        /// 删除下载文件事件
+        /// </summary>
+        /// <param name="action"></param>
+        public void RemoveDownloadEvent(UnityAction<float> action)
+        {
+            if (action != null)
+            {
+                downLoadAction -= action;
+            }
+        }
+
+        /// <summary>
+        /// 添加上传文件事件
+        /// </summary>
+        /// <param name="action"></param>
+        public void AddUploadFileEvent(UnityAction<float> action)
+        {
+            if (action != null)
+            {
+                upLoadFileAction += action;
+            }
+        }
+
+        /// <summary>
+        /// 删除上传文件事件
+        /// </summary>
+        /// <param name="action"></param>
+        public void RemoveUploadFileEvent(UnityAction<float> action)
+        {
+            if (action != null)
+            {
+                upLoadFileAction -= action;
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// 异步上传文件到Ftp服务器
         /// </summary>
@@ -35,6 +91,7 @@ namespace GameFramework.NetManager
                         while (contentLength > 0)
                         {
                             stream.Write(bytes, 0, contentLength);
+                            upLoadFileAction?.Invoke(contentLength);
                             contentLength = fs.Read(bytes, 0, bytes.Length);
                         }
                         fs.Close();
@@ -85,6 +142,7 @@ namespace GameFramework.NetManager
                                 // 把下载的字节数组长度传出去，以便制作加载进度条
                                 if (fileName != "ABCompareInfo.txt")
                                     EventCenter.Instance.EventTrigger<long>("FtpDownLoadFileSize", contentLength);
+                                downLoadAction?.Invoke(contentLength);
 
                                 contentLength = stream.Read(bytes, 0, bytes.Length);
                             }

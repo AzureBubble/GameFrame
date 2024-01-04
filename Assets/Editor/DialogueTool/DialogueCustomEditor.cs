@@ -13,7 +13,7 @@ public class DialogueCustomEditor : Editor
         if (GUILayout.Button("Open In Editor"))
         {
             // target 表示当前选择的物体
-            GameTool.OpenDialogueToolWindow((DialogueData_SO)target);
+            //GameTool.OpenDialogueToolWindow((DialogueData_SO)target);
         }
         base.OnInspectorGUI();
     }

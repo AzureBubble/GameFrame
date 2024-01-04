@@ -6,7 +6,7 @@ namespace GameFramework.GameTool
 {
     public class GameTool : EditorWindow
     {
-        private static DialogueData_SO currentData = null; // 当前对话数据
+        //private static DialogueData_SO currentData = null; // 当前对话数据
 
         [MenuItem("GameTool/OpenGameToolWindow")]
         private static void OpenGameToolWindow()
@@ -18,38 +18,39 @@ namespace GameFramework.GameTool
             window.Show();
         }
 
-        public static void OpenDialogueToolWindow(DialogueData_SO data)
-        {
-            currentData = data;
-            OpenGameToolWindow();
-            type = ToolType.DialogueTool;
-            dialogueTool.SetDialogueData(currentData);
-        }
+        //public static void OpenDialogueToolWindow(DialogueData_SO data)
+        //{
+        //    currentData = data;
+        //    OpenGameToolWindow();
+        //    type = ToolType.DialogueTool;
+        //    dialogueTool.SetDialogueData(currentData);
+        //}
 
         /// <summary>
         /// 双击 DialogueData_SO 文件打开编辑窗口
         /// </summary>
         /// <param name="instancID">物体ID</param>
         /// <param name="line"></param>
-        [OnOpenAsset]
-        public static bool OpenDialogueAsset(int instancID, int line)
-        {
-            DialogueData_SO data = EditorUtility.InstanceIDToObject(instancID) as DialogueData_SO;
-            if (data != null)
-            {
-                currentData = data;
-                OpenGameToolWindow();
-                type = ToolType.DialogueTool;
-                dialogueTool.SetDialogueData(currentData);
-                return true;
-            }
-            return false;
-        }
+        //[OnOpenAsset]
+        //public static bool OpenDialogueAsset(int instancID, int line)
+        //{
+        //    DialogueData_SO data = EditorUtility.InstanceIDToObject(instancID) as DialogueData_SO;
+        //    if (data != null)
+        //    {
+        //        currentData = data;
+        //        OpenGameToolWindow();
+        //        type = ToolType.DialogueTool;
+        //        dialogueTool.SetDialogueData(currentData);
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
         private static ToolType type;
         private ExcelTool excelTool;
         private ABTool abTool;
-        private static DialogueTool dialogueTool;
+
+        //private static DialogueTool dialogueTool;
         private LuaTool luaTool;
 
         private void OnEnable()
@@ -71,10 +72,10 @@ namespace GameFramework.GameTool
             {
                 abTool = new ABTool();
             }
-            if (dialogueTool == null)
-            {
-                dialogueTool = new DialogueTool(currentData);
-            }
+            //if (dialogueTool == null)
+            //{
+            //    dialogueTool = new DialogueTool(currentData);
+            //}
             if (luaTool == null)
             {
                 luaTool = new LuaTool();
@@ -95,9 +96,9 @@ namespace GameFramework.GameTool
                     abTool?.OnGUI();
                     break;
 
-                case ToolType.DialogueTool:
-                    dialogueTool?.OnGUI();
-                    break;
+                //case ToolType.DialogueTool:
+                //    dialogueTool?.OnGUI();
+                //    break;
 
                 case ToolType.LuaTool:
                     luaTool?.OnGUI();
@@ -114,24 +115,24 @@ namespace GameFramework.GameTool
             GUILayout.BeginHorizontal();
             GUILayout.Space(30);
             float toolbarWidth = position.width - 15 * 4;
-            string[] labels = new string[4] { "ExcelTool", "ABTool", "DialogueTool", "LuaTool" };
+            string[] labels = new string[3] { "ExcelTool", "ABTool", "LuaTool" };
             type = (ToolType)GUILayout.Toolbar((int)type, labels, GUILayout.Width(toolbarWidth), GUILayout.Height(30f));
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.Space(20f);
-            if (type != ToolType.DialogueTool)
-            {
-                dialogueTool?.OnDisable();
-            }
+            //if (type != ToolType.DialogueTool)
+            //{
+            //    dialogueTool?.OnDisable();
+            //}
         }
 
         private void OnDestroy()
         {
-            currentData = null;
+            //currentData = null;
             excelTool = null;
             abTool = null;
-            dialogueTool?.OnDisable();
-            dialogueTool = null;
+            //dialogueTool?.OnDisable();
+            //dialogueTool = null;
             luaTool = null;
         }
 
@@ -140,7 +141,7 @@ namespace GameFramework.GameTool
         /// </summary>
         public enum ToolType
         {
-            ExcelTool, ABTool, DialogueTool, LuaTool,
+            ExcelTool, ABTool, LuaTool,
         }
     }
 }
