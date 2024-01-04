@@ -140,16 +140,16 @@ namespace GameFramework.ObjectPoolManager
         private Dictionary<string, PoolData> poolDic = new Dictionary<string, PoolData>();
 
         /// <summary>
-        /// 从缓存池中取物体
+        /// 异步加载 从缓存池中取物体
         /// </summary>
         /// <param name="name">物体名字</param>
         /// <param name="callback">回调函数</param>
-        public void GetObj(string name, UnityAction<GameObject> callback = null, string path = "Prefabs/")
+        /// <param name="path">物体存放路径</param>
+        public void GetObjAsync(string name, UnityAction<GameObject> callback = null, string path = "Prefabs/")
         {
             // 判断对应的对象池是否存在
             if (!poolDic.ContainsKey(name)
-                || (poolDic[name].Count == 0
-                && poolDic[name].NeedCreate))
+                || (poolDic[name].Count == 0 && poolDic[name].NeedCreate))
             {
                 // 异步加载预制体资源
                 ResourcesMgr.Instance.LoadResAsync<GameObject>(path + name, (resObj) =>
@@ -170,6 +170,38 @@ namespace GameFramework.ObjectPoolManager
             {
                 callback?.Invoke(poolDic[name].GetObj());
             }
+        }
+
+        /// <summary>
+        /// 同步加载 从缓存池中取物体
+        /// </summary>
+        /// <param name="name">物体名字</param>
+        /// <param name="path">物体存放路径</param>
+        public GameObject GetObj(string name, string path = "Prefabs/")
+        {
+            GameObject obj = null;
+            // 判断对应的对象池是否存在
+            if (!poolDic.ContainsKey(name)
+                || (poolDic[name].Count == 0 && poolDic[name].NeedCreate))
+            {
+                // 加载预制体资源
+                obj = ResourcesMgr.Instance.LoadRes<GameObject>(path + name, name);
+
+                if (!poolDic.ContainsKey(name))
+                {
+                    poolDic.Add(name, new PoolData(obj));
+                }
+                else
+                {
+                    poolDic[name].PushUsedList(obj);
+                }
+            }
+            else
+            {
+                obj = poolDic[name].GetObj();
+            }
+
+            return obj;
         }
 
         /// <summary>

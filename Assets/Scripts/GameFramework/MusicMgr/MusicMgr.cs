@@ -42,10 +42,11 @@ namespace GameFramework.MusicManager
         #region 游戏背景音乐
 
         /// <summary>
-        /// 播放背景音乐
+        /// 异步 播放背景音乐
         /// </summary>
         /// <param name="name">音乐名字</param>
-        public void PlayGameMusic(string name)
+        /// <param name="path">资源路径</param>
+        public void PlayGameMusicAsync(string name, string path = "Music/BK/")
         {
             if (gameMusic == null)
             {
@@ -53,13 +54,33 @@ namespace GameFramework.MusicManager
                 gameMusic = gameMusicObj.AddComponent<AudioSource>();
                 gameMusicObj.transform.SetParent(musicMgrObj.transform, false);
             }
-            ResourcesMgr.Instance.LoadResAsync<AudioClip>("Music/BK/" + name, (clip) =>
+            ResourcesMgr.Instance.LoadResAsync<AudioClip>(path + name, (clip) =>
             {
                 gameMusic.clip = clip;
                 gameMusic.loop = true;
                 gameMusic.volume = gameMusicVolume;
                 gameMusic.Play();
             });
+        }
+
+        /// <summary>
+        /// 同步 播放背景音乐
+        /// </summary>
+        /// <param name="name">音乐名字</param>
+        /// <param name="path">资源路径</param>
+        public void PlayGameMusic(string name, string path = "Music/BK/")
+        {
+            if (gameMusic == null)
+            {
+                GameObject gameMusicObj = new GameObject("Game Music");
+                gameMusic = gameMusicObj.AddComponent<AudioSource>();
+                gameMusicObj.transform.SetParent(musicMgrObj.transform, false);
+            }
+            AudioClip clip = ResourcesMgr.Instance.LoadRes<AudioClip>(path + name);
+            gameMusic.clip = clip;
+            gameMusic.loop = true;
+            gameMusic.volume = gameMusicVolume;
+            gameMusic.Play();
         }
 
         /// <summary>
@@ -106,10 +127,11 @@ namespace GameFramework.MusicManager
         #region 游戏环境音乐
 
         /// <summary>
-        /// 播放环境音乐
+        /// 异步 播放环境音乐
         /// </summary>
         /// <param name="name">音乐名字</param>
-        public void PlayAmbientMusic(string name)
+        /// <param name="path">资源路径</param>
+        public void PlayAmbientMusicAsync(string name, string path = "Music/Ambient/")
         {
             if (ambientMusic == null)
             {
@@ -117,13 +139,33 @@ namespace GameFramework.MusicManager
                 ambientMusic = ambientMusicObj.AddComponent<AudioSource>();
                 ambientMusicObj.transform.SetParent(musicMgrObj.transform, false);
             }
-            ResourcesMgr.Instance.LoadResAsync<AudioClip>("Music/Ambient/" + name, (clip) =>
+            ResourcesMgr.Instance.LoadResAsync<AudioClip>(path + name, (clip) =>
             {
                 ambientMusic.clip = clip;
                 ambientMusic.loop = true;
                 ambientMusic.volume = ambientMusicVolume;
                 ambientMusic.Play();
             });
+        }
+
+        /// <summary>
+        /// 同步 播放环境音乐
+        /// </summary>
+        /// <param name="name">音乐名字</param>
+        /// <param name="path">资源路径</param>
+        public void PlayAmbientMusic(string name, string path = "Music/Ambient/")
+        {
+            if (ambientMusic == null)
+            {
+                GameObject ambientMusicObj = new GameObject("Ambient Music");
+                ambientMusic = ambientMusicObj.AddComponent<AudioSource>();
+                ambientMusicObj.transform.SetParent(musicMgrObj.transform, false);
+            }
+            AudioClip clip = ResourcesMgr.Instance.LoadRes<AudioClip>(path + name);
+            ambientMusic.clip = clip;
+            ambientMusic.loop = true;
+            ambientMusic.volume = ambientMusicVolume;
+            ambientMusic.Play();
         }
 
         /// <summary>
@@ -170,18 +212,19 @@ namespace GameFramework.MusicManager
         #region 游戏音效
 
         /// <summary>
-        /// 播放游戏音效
+        /// 异步 播放游戏音效
         /// </summary>
         /// <param name="name">音效名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="callback">回调函数</param>
-        public void PlaySoundMusic(string name, bool isLoop = false, UnityAction<AudioSource> callback = null)
+        /// <param name="path">资源路径</param>
+        public void PlaySoundMusicAsync(string name, bool isLoop = false, UnityAction<AudioSource> callback = null, string path = "Music/Sound/")
         {
             // 先加载音效资源
-            ResourcesMgr.Instance.LoadResAsync<AudioClip>("Music/Sound/" + name, (soundClip) =>
+            ResourcesMgr.Instance.LoadResAsync<AudioClip>(path + name, (soundClip) =>
             {
                 // 然后通过对象池管理音效播放组件
-                PoolMgr.Instance.GetObj("Sound", (soundObj) =>
+                PoolMgr.Instance.GetObjAsync("Sound", (soundObj) =>
                 {
                     AudioSource audioSource = soundObj.GetComponent<AudioSource>();
                     audioSource.loop = isLoop;
@@ -192,6 +235,30 @@ namespace GameFramework.MusicManager
                     callback?.Invoke(audioSource);
                 });
             });
+        }
+
+        /// <summary>
+        /// 同步 播放游戏音效
+        /// </summary>
+        /// <param name="name">音效名字</param>
+        /// <param name="isLoop">是否循环</param>
+        /// <param name="path">资源路径</param>
+        public AudioSource PlaySoundMusic(string name, bool isLoop = false, string path = "Music/Sound/")
+        {
+            // 先加载音效资源
+            AudioClip soundClip = ResourcesMgr.Instance.LoadRes<AudioClip>(path + name);
+
+            // 然后通过对象池管理音效播放组件
+            GameObject soundObj = PoolMgr.Instance.GetObj("Sound");
+
+            AudioSource audioSource = soundObj.GetComponent<AudioSource>();
+            audioSource.loop = isLoop;
+            audioSource.volume = soundMusicVolume;
+            audioSource.mute = soundMusicIsMute;
+            audioSource.PlayOneShot(soundClip);
+            soundList.Add(audioSource);
+
+            return audioSource;
         }
 
         /// <summary>
