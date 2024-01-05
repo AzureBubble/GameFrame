@@ -66,7 +66,7 @@ namespace GameFramework.AchieveManager
         /// </summary>
         private void NotifyUIUpdate(string name)
         {
-            EventCenter.Instance.EventTrigger("UpdateAchievement", name);
+            EventCenter.Instance.EventTrigger(E_EventType.UpdateAchievement, name);
         }
 
         public override void Dispose()

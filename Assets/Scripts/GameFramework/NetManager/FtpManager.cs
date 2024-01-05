@@ -141,7 +141,7 @@ namespace GameFramework.NetManager
                                 fs.Write(bytes, 0, contentLength);
                                 // 把下载的字节数组长度传出去，以便制作加载进度条
                                 if (fileName != "ABCompareInfo.txt")
-                                    EventCenter.Instance.EventTrigger<long>("FtpDownLoadFileSize", contentLength);
+                                    EventCenter.Instance.EventTrigger<long>(E_EventType.FtpDownLoadFileSize, contentLength);
                                 downLoadAction?.Invoke(contentLength);
 
                                 contentLength = stream.Read(bytes, 0, bytes.Length);

@@ -78,20 +78,20 @@ public class ABUpdateMgr : MonoBehaviour
         downLoadABList.Clear();
 
         // 加载远端AB包对比文件
-        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "开始下载AB包对比文件");
+        EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "开始下载AB包对比文件");
         DownLoadABCompareFile((isDownLoadABCompareFileOver) =>
         {
             // 远端对比文件下载成功后 继续向下执行
             if (isDownLoadABCompareFileOver)
             {
-                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "下载AB包对比文件完成,开始解析");
+                EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "下载AB包对比文件完成,开始解析");
                 // 解析远端AB包对比文件
                 // 读取下载的AB包对比文件
                 string remoteABCompareInfo = File.ReadAllText(localPath + "ABCompareInfo_TMP.txt");
                 AnalysisABCompareFileInfo(remoteABCompareInfo, remoteABDic);
-                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "解析远端对比文件完成");
+                EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "解析远端对比文件完成");
 
-                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "开始解析本地对比文件");
+                EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "开始解析本地对比文件");
 
                 // 异步协程解析本地AB包对比文件
                 AnalysisLocalABCompareFileInfoAsync((isAnalysisLocalOver) =>
@@ -99,7 +99,7 @@ public class ABUpdateMgr : MonoBehaviour
                     if (isAnalysisLocalOver)
                     {
                         long downLoadSize = 0;
-                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "开始对比AB包文件");
+                        EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "开始对比AB包文件");
                         foreach (string abName in remoteABDic.Keys)
                         {
                             // 如果本地不存在AB包，则加入待下载列表中
@@ -122,9 +122,9 @@ public class ABUpdateMgr : MonoBehaviour
                             }
                         }
                         // 把需要更新的AB包文件大小通过事件中心传出外部
-                        EventCenter.Instance.EventTrigger<long>("DownLoadABFileSize", downLoadSize);
-                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "对比AB包文件完成");
-                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "删除无用AB包，释放空间");
+                        EventCenter.Instance.EventTrigger<long>(E_EventType.FtpDownLoadFileSize, downLoadSize);
+                        EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "对比AB包文件完成");
+                        EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "删除无用AB包，释放空间");
                         // 删除多余的AB包文件，释放内存空间
                         foreach (string abName in localABDic.Keys)
                         {
@@ -133,32 +133,32 @@ public class ABUpdateMgr : MonoBehaviour
                                 File.Delete(localPath + abName);
                             }
                         }
-                        EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "开始下载更新AB包文件");
+                        EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "开始下载更新AB包文件");
                         // 下载更新AB包文件
                         DownLoadABFile((isDownLoadAbFileOver) =>
                         {
                             if (isDownLoadAbFileOver)
                             {
-                                EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "更新本地AB包对比文件");
+                                EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "更新本地AB包对比文件");
 
                                 // 把最新AB包对比文件写入本地
                                 File.WriteAllText(localPath + "ABCompareInfo.txt", remoteABCompareInfo);
                             }
                             // 通知外部AB包更新状态
-                            EventCenter.Instance.EventTrigger<bool>("UpdateStatus", isDownLoadAbFileOver);
+                            EventCenter.Instance.EventTrigger<bool>(E_EventType.UpdateStatus, isDownLoadAbFileOver);
                         });
                     }
                     else
                     {
                         // 解析本地AB包文件失败
-                        EventCenter.Instance.EventTrigger<bool>("UpdateStatus", false);
+                        EventCenter.Instance.EventTrigger<bool>(E_EventType.UpdateStatus, false);
                     }
                 });
             }
             else
             {
                 // 远端AB包对比文件下载失败
-                EventCenter.Instance.EventTrigger<bool>("UpdateStatus", false);
+                EventCenter.Instance.EventTrigger<bool>(E_EventType.UpdateStatus, false);
             }
         });
     }
@@ -262,13 +262,13 @@ public class ABUpdateMgr : MonoBehaviour
             AnalysisABCompareFileInfo(req.downloadHandler.text, localABDic);
             // 解析成功
             callback?.Invoke(true);
-            EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "解析本地对比文件成功");
+            EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "解析本地对比文件成功");
         }
         else
         {
             // 解析失败
             callback?.Invoke(false);
-            EventCenter.Instance.EventTrigger<string>("DownLoadABCompare", "解析本地对比文件失败");
+            EventCenter.Instance.EventTrigger<string>(E_EventType.DownLoadABCompare, "解析本地对比文件失败");
         }
     }
 

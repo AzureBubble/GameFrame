@@ -93,40 +93,40 @@ namespace GameFramework.GFEventCenter
     {
         /// <summary>
         /// 事件容器
-        /// key —— 事件的名字（比如：怪物死亡，玩家死亡，通关 等等）
+        /// key —— 事件的枚举
         /// value —— 对应的是 监听这个事件 对应的委托函数
         /// </summary>
-        private Dictionary<string, IEventInfo> eventDic = new Dictionary<string, IEventInfo>();
+        private Dictionary<E_EventType, IEventInfo> eventDic = new Dictionary<E_EventType, IEventInfo>();
 
         #region 不带参数的事件监听
 
         /// <summary>
         /// 添加事件监听
         /// </summary>
-        /// <param name="actionName">事件名字</param>
+        /// <param name="eventType">事件名字</param>
         /// <param name="action">事件</param>
-        public void AddEventListener(string actionName, UnityAction action)
+        public void AddEventListener(E_EventType eventType, UnityAction action)
         {
             // 如果字典中存在该事件
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
                 (eventInfo as EventInfo).actions += action;
             }
             else // 否则
             {
-                eventDic.Add(actionName, new EventInfo(action));
+                eventDic.Add(eventType, new EventInfo(action));
             }
         }
 
         /// <summary>
         /// 移除事件监听
         /// </summary>
-        /// <param name="actionName">事件名字</param>
+        /// <param name="eventType">事件名字</param>
         /// <param name="action">事件</param>
-        public void RemoveEventListener(string actionName, UnityAction action)
+        public void RemoveEventListener(E_EventType eventType, UnityAction action)
         {
             // 如果字典中存在该事件
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
                 (eventInfo as EventInfo).actions -= action;
             }
@@ -135,12 +135,12 @@ namespace GameFramework.GFEventCenter
         /// <summary>
         /// 不带参数事件触发
         /// </summary>
-        /// <param name="actionName">事件名字</param>
-        public void EventTrigger(string actionName)
+        /// <param name="eventType">事件名字</param>
+        public void EventTrigger(E_EventType eventType)
         {
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
-                (eventDic[actionName] as EventInfo).EventTrigger();
+                (eventDic[eventType] as EventInfo).EventTrigger();
             }
         }
 
@@ -148,33 +148,33 @@ namespace GameFramework.GFEventCenter
 
         #region 一个参数的事件监听
 
-        public void AddEventListener<T>(string actionName, UnityAction<T> action)
+        public void AddEventListener<T>(E_EventType eventType, UnityAction<T> action)
         {
             // 如果字典中存在该事件
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
                 (eventInfo as EventInfo<T>).actions += action;
             }
             else // 否则
             {
-                eventDic.Add(actionName, new EventInfo<T>(action));
+                eventDic.Add(eventType, new EventInfo<T>(action));
             }
         }
 
-        public void RemoveEventListener<T>(string actionName, UnityAction<T> action)
+        public void RemoveEventListener<T>(E_EventType eventType, UnityAction<T> action)
         {
             // 如果字典中存在该事件
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
                 (eventInfo as EventInfo<T>).actions -= action;
             }
         }
 
-        public void EventTrigger<T>(string actionName, T t)
+        public void EventTrigger<T>(E_EventType eventType, T parameter)
         {
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
-                (eventDic[actionName] as EventInfo<T>).EventTrigger(t);
+                (eventDic[eventType] as EventInfo<T>).EventTrigger(parameter);
             }
         }
 
@@ -182,33 +182,33 @@ namespace GameFramework.GFEventCenter
 
         #region 两个参数的事件监听
 
-        public void AddEventListener<T1, T2>(string actionName, UnityAction<T1, T2> action)
+        public void AddEventListener<T1, T2>(E_EventType eventType, UnityAction<T1, T2> action)
         {
             // 如果字典中存在该事件
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
                 (eventInfo as EventInfo<T1, T2>).actions += action;
             }
             else // 否则
             {
-                eventDic.Add(actionName, new EventInfo<T1, T2>(action));
+                eventDic.Add(eventType, new EventInfo<T1, T2>(action));
             }
         }
 
-        public void RemoveEventListener<T1, T2>(string actionName, UnityAction<T1, T2> action)
+        public void RemoveEventListener<T1, T2>(E_EventType eventType, UnityAction<T1, T2> action)
         {
             // 如果字典中存在该事件
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
                 (eventInfo as EventInfo<T1, T2>).actions -= action;
             }
         }
 
-        public void EventTrigger<T1, T2>(string actionName, T1 t1, T2 t2)
+        public void EventTrigger<T1, T2>(E_EventType eventType, T1 parameter1, T2 parameter2)
         {
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
-                (eventDic[actionName] as EventInfo<T1, T2>).EventTrigger(t1, t2);
+                (eventDic[eventType] as EventInfo<T1, T2>).EventTrigger(parameter1, parameter2);
             }
         }
 
@@ -216,39 +216,34 @@ namespace GameFramework.GFEventCenter
 
         #region 三个参数的事件监听
 
-        public void AddEventListener<T1, T2, T3>(string actionName, UnityAction<T1, T2, T3> action)
+        public void AddEventListener<T1, T2, T3>(E_EventType eventType, UnityAction<T1, T2, T3> action)
         {
             // 如果字典中存在该事件
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
                 (eventInfo as EventInfo<T1, T2, T3>).actions += action;
             }
             else // 否则
             {
-                eventDic.Add(actionName, new EventInfo<T1, T2, T3>(action));
+                eventDic.Add(eventType, new EventInfo<T1, T2, T3>(action));
             }
         }
 
-        public void RemoveEventListener<T1, T2, T3>(string actionName, UnityAction<T1, T2, T3> action)
+        public void RemoveEventListener<T1, T2, T3>(E_EventType eventType, UnityAction<T1, T2, T3> action)
         {
             // 如果字典中存在该事件
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
                 (eventInfo as EventInfo<T1, T2, T3>).actions -= action;
             }
         }
 
-        public void EventTrigger<T1, T2, T3>(string actionName, T1 t1, T2 t2, T3 t3)
+        public void EventTrigger<T1, T2, T3>(E_EventType eventType, T1 parameter1, T2 parameter2, T3 parameter3)
         {
-            if (eventDic.TryGetValue(actionName, out IEventInfo eventInfo))
+            if (eventDic.TryGetValue(eventType, out IEventInfo eventInfo))
             {
-                (eventDic[actionName] as EventInfo<T1, T2, T3>).EventTrigger(t1, t2, t3);
+                (eventDic[eventType] as EventInfo<T1, T2, T3>).EventTrigger(parameter1, parameter2, parameter3);
             }
-        }
-
-        internal void EventTrigger<T>(string v, object loadingChange)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion
