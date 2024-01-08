@@ -26,10 +26,14 @@ namespace GameFramework.StateMachine
         /// </summary>
         private IState currentState;
 
-        public IState CurrentState
-        {
-            get { return currentState; }
-        }
+        public string CurrentState => currentState == null ? string.Empty : currentState.GetType().FullName;
+
+        /// <summary>
+        /// 上一次状态
+        /// </summary>
+        private IState preState;
+
+        public string PreState => preState == null ? string.Empty : preState.GetType().FullName;
 
         private BaseFsm()
         { }
@@ -71,6 +75,9 @@ namespace GameFramework.StateMachine
         /// </summary>
         public void StateOn(string stateName)
         {
+            preState = currentState;
+            currentState?.OnExit();
+
             if (stateDict.TryGetValue(stateName, out currentState))
             {
                 currentState?.OnEnter();

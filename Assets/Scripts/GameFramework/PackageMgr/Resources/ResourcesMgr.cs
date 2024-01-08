@@ -14,7 +14,7 @@ namespace GameFramework.PackageMgr.ResourcesManager
         /// <param name="name">资源路径</param>
         /// <param name="objName">物体实例化后名字</param>
         /// <returns></returns>
-        public T LoadRes<T>(string path, string objName = null) where T : Object
+        public T LoadRes<T>(string path, string objName = null, Transform parent = null) where T : Object
         {
             T res = Resources.Load<T>(path);
 
@@ -22,9 +22,9 @@ namespace GameFramework.PackageMgr.ResourcesManager
             {
                 if (objName == null)
                 {
-                    return GameObject.Instantiate(res);
+                    return GameObject.Instantiate(res, parent);
                 }
-                T obj = GameObject.Instantiate(res);
+                T obj = GameObject.Instantiate(res, parent);
                 obj.name = objName;
                 return obj;
             }
@@ -39,13 +39,13 @@ namespace GameFramework.PackageMgr.ResourcesManager
         /// <param name="path">资源路径</param>
         /// <param name="callback">回调函数</param>
         /// <param name="objName">物体实例化后名字</param>
-        public void LoadResAsync<T>(string path, UnityAction<T> callback, string objName = null) where T : Object
+        public void LoadResAsync<T>(string path, UnityAction<T> callback, string objName = null, Transform parent = null) where T : Object
         {
             // 协程异步加载资源
-            SingletonManager.StartCoroutine(LoadResAsyncCoroutine<T>(path, callback, objName));
+            SingletonManager.StartCoroutine(LoadResAsyncCoroutine<T>(path, callback, objName, parent));
         }
 
-        private IEnumerator LoadResAsyncCoroutine<T>(string path, UnityAction<T> callback, string objName = null) where T : Object
+        private IEnumerator LoadResAsyncCoroutine<T>(string path, UnityAction<T> callback, string objName = null, Transform parent = null) where T : Object
         {
             ResourceRequest rr = Resources.LoadAsync<T>(path);
             // 等待异步加载结束
@@ -56,11 +56,11 @@ namespace GameFramework.PackageMgr.ResourcesManager
                 // 实例化一个游戏对象并通过回调函数返回
                 if (objName == null)
                 {
-                    callback?.Invoke(GameObject.Instantiate(rr.asset as T));
+                    callback?.Invoke(GameObject.Instantiate(rr.asset as T, parent));
                 }
                 else
                 {
-                    T obj = GameObject.Instantiate(rr.asset as T);
+                    T obj = GameObject.Instantiate(rr.asset as T, parent);
                     obj.name = objName;
                     callback?.Invoke(obj);
                 }
