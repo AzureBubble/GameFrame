@@ -33,7 +33,8 @@ namespace GameFramework.ObjectPoolManager
                 () =>
                             {
                                 GameObject obj = null;
-                                obj = ResourcesMgr.Instance.LoadRes<GameObject>(path + objName, objName);
+                                obj = GameObject.Instantiate(ResourcesMgr.Instance.LoadRes<GameObject>(path + objName));
+                                obj.name = objName;
                                 obj.transform.SetParent(null, false);
                                 return obj;
                             },

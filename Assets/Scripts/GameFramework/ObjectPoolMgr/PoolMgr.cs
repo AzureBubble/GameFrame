@@ -154,7 +154,9 @@ namespace GameFramework.ObjectPoolManager
                 // 异步加载预制体资源
                 ResourcesMgr.Instance.LoadResAsync<GameObject>(path + name, (resObj) =>
                 {
-                    callback?.Invoke(resObj);
+                    GameObject obj = GameObject.Instantiate(resObj);
+                    obj.name = name;
+                    callback?.Invoke(obj);
 
                     if (!poolDic.ContainsKey(name))
                     {
@@ -164,7 +166,7 @@ namespace GameFramework.ObjectPoolManager
                     {
                         poolDic[name].PushUsedList(resObj);
                     }
-                }, name);
+                });
             }
             else
             {
@@ -185,7 +187,8 @@ namespace GameFramework.ObjectPoolManager
                 || (poolDic[name].Count == 0 && poolDic[name].NeedCreate))
             {
                 // 加载预制体资源
-                obj = ResourcesMgr.Instance.LoadRes<GameObject>(path + name, name);
+                obj = GameObject.Instantiate(ResourcesMgr.Instance.LoadRes<GameObject>(path + name));
+                obj.name = name;
 
                 if (!poolDic.ContainsKey(name))
                 {

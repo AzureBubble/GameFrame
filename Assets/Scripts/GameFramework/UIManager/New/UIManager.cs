@@ -29,7 +29,8 @@ namespace GameFramework.AutoUIManager
         {
             if (GameObject.Find("UIRoot") == null)
             {
-                GameObject obj = ResourcesMgr.Instance.LoadRes<GameObject>("UI/UIRoot", "UIRoot");
+                GameObject obj = GameObject.Instantiate(ResourcesMgr.Instance.LoadRes<GameObject>("UI/UIRoot"));
+                obj.name = "UIRoot";
                 mUIRoot = obj.GetComponent<Transform>();
                 GameObject.DontDestroyOnLoad(obj);
             }
@@ -485,9 +486,9 @@ namespace GameFramework.AutoUIManager
         /// <returns></returns>
         private GameObject LoadWindow(string windowName)
         {
-            GameObject window = ResourcesMgr.Instance.LoadRes<GameObject>(
-                mUIConfig.GetWindowPath(windowName), windowName, mUIRoot);
-
+            GameObject window = GameObject.Instantiate(ResourcesMgr.Instance.LoadRes<GameObject>(
+                mUIConfig.GetWindowPath(windowName)), mUIRoot);
+            window.name = windowName;
             window.transform.localScale = Vector3.one;
             window.transform.localPosition = Vector3.zero;
             window.transform.rotation = Quaternion.identity;
@@ -499,12 +500,14 @@ namespace GameFramework.AutoUIManager
             ResourcesMgr.Instance.LoadResAsync<GameObject>(
                 mUIConfig.GetWindowPath(windowName), (window) =>
                 {
-                    window.transform.localScale = Vector3.one;
-                    window.transform.localPosition = Vector3.zero;
-                    window.transform.rotation = Quaternion.identity;
+                    GameObject windowObj = GameObject.Instantiate(window, mUIRoot);
+                    windowObj.name = windowName;
+                    windowObj.transform.localScale = Vector3.one;
+                    windowObj.transform.localPosition = Vector3.zero;
+                    windowObj.transform.rotation = Quaternion.identity;
 
-                    callback?.Invoke(window);
-                }, windowName, mUIRoot);
+                    callback?.Invoke(windowObj);
+                });
         }
 
         public override void Dispose()

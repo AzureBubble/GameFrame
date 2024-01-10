@@ -38,7 +38,8 @@ namespace GameFramework.GFUIManager
         public override void Initialize()
         {
             // 构造函数时，加载 UI 面板，并设置不销毁
-            GameObject obj = ResourcesMgr.Instance.LoadRes<GameObject>("UI/Canvas", "Canvas");
+            GameObject obj = GameObject.Instantiate(ResourcesMgr.Instance.LoadRes<GameObject>("UI/Canvas"));
+            obj.name = "Canvas";
             canvas = obj.GetComponent<RectTransform>();
             GameObject.DontDestroyOnLoad(obj);
             // 找到所有的层级结点
@@ -96,20 +97,22 @@ namespace GameFramework.GFUIManager
             {
                 Transform parent = GetPanelParent(layer);
 
+                GameObject panelObj = GameObject.Instantiate(resObj, parent);
+                panelObj.name = panelName;
+
                 // 设置面板的位置，防止变形错位
-                resObj.transform.SetParent(parent, false);
-                resObj.transform.localPosition = Vector3.zero;
-                resObj.transform.localScale = Vector3.one;
-                (resObj.transform as RectTransform).offsetMax = Vector2.zero;
-                (resObj.transform as RectTransform).offsetMin = Vector2.zero;
+                panelObj.transform.localPosition = Vector3.zero;
+                panelObj.transform.localScale = Vector3.one;
+                (panelObj.transform as RectTransform).offsetMax = Vector2.zero;
+                (panelObj.transform as RectTransform).offsetMin = Vector2.zero;
 
                 // 把面板设置显示，并通过回调函数返回出去
                 // 再把面板加入到已经在场景显示的字典中
-                T panel = resObj.GetComponent<T>();
+                T panel = panelObj.GetComponent<T>();
                 callback?.Invoke(panel);
                 panel.ShowMe();
                 panelDic.Add(panelName, panel);
-            }, panelName);
+            });
         }
 
         /// <summary>
