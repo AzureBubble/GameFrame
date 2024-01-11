@@ -105,10 +105,11 @@ namespace GameFramework.AutoUIManager
 
         public override void SetVisible(bool isVisble)
         {
+            Visible = isVisble;
             //gameObject.SetActive(isVisble);
+            if (mCanvasGroup == null) return;
             mCanvasGroup.alpha = isVisble ? 1 : 0;
             mCanvasGroup.blocksRaycasts = isVisble;
-            Visible = isVisble;
         }
 
         /// <summary>
@@ -122,6 +123,7 @@ namespace GameFramework.AutoUIManager
             {
                 return;
             }
+            if (mUIMask == null) return;
             mUIMask.alpha = isVisble ? 1 : 0;
         }
 

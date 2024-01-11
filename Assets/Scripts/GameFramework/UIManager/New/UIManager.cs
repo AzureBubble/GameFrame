@@ -361,7 +361,8 @@ namespace GameFramework.AutoUIManager
             {
                 WindowBase window = visibleWindowList[i];
 
-                if (window == null && window.gameObject == null) continue;
+                if ((window == null && window.gameObject == null)
+                    || window.Canvas == null) continue;
                 // 把所有的 面板的 遮罩设置为 False
                 window.SetMaskVisible(false);
 
