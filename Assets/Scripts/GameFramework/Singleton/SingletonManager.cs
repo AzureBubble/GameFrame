@@ -32,7 +32,7 @@ public static class SingletonManager
     /// <summary>
     /// 帧更新方法
     /// </summary>
-    public static void OnUpdate()
+    private static void OnUpdate()
     {
         if (updateSingletons.Count > 0)
         {
