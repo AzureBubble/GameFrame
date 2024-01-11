@@ -28,9 +28,9 @@ namespace GameFramework.AutoUIManager
             objDataList = new List<EditorObjectData>();
 
             // 设置脚本生成路径
-            if (!Directory.Exists(GenerateConfig.FindComponentGeneratePath))
+            if (!Directory.Exists(GenerateConfig.BindComponentGeneratePath))
             {
-                Directory.CreateDirectory(GenerateConfig.FindComponentGeneratePath);
+                Directory.CreateDirectory(GenerateConfig.BindComponentGeneratePath);
             }
 
             AnalysisWindowNodeData(obj.transform, obj.name);
@@ -42,7 +42,7 @@ namespace GameFramework.AutoUIManager
             string datalistJson = JsonConvert.SerializeObject(objDataList);
             PlayerPrefs.SetString(GenerateConfig.OBJDATALIST_KEY, datalistJson);
 
-            string csPath = GenerateConfig.FindComponentGeneratePath + "/" + obj.name + "DataComponent.cs";
+            string csPath = GenerateConfig.BindComponentGeneratePath + "/" + obj.name + "DataComponent.cs";
             UIWindowEditor.ShowScriptWindow(str, csPath);
             EditorPrefs.SetString("GeneratorClassName", obj.name + "DataComponent");
         }
@@ -85,6 +85,7 @@ namespace GameFramework.AutoUIManager
             StringBuilder sb = new StringBuilder();
             string nameSpaceName = "GameFramework.AutoUIManager";
             //添加引用
+            sb.AppendLine("using TMPro;");
             sb.AppendLine("using UnityEngine;");
             sb.AppendLine("using UnityEngine.UI;");
 
@@ -155,7 +156,7 @@ namespace GameFramework.AutoUIManager
         /// 编译完成系统自动调用
         /// </summary>
         [UnityEditor.Callbacks.DidReloadScripts]
-        public static void AddComponent2Window()
+        private static void AddComponent2Window()
         {
             //如果当前不是生成数据脚本的回调，就不处理
             string className = EditorPrefs.GetString("GeneratorClassName");

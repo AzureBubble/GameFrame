@@ -37,7 +37,7 @@ public class UIWindowEditor : EditorWindow
         window.Show();
     }
 
-    public void OnGUI()
+    private void OnGUI()
     {
         // 绘制ScroView
         scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.Height(600), GUILayout.Width(800));
@@ -61,7 +61,7 @@ public class UIWindowEditor : EditorWindow
         EditorGUILayout.EndHorizontal();
     }
 
-    public void ButtonClick()
+    private void ButtonClick()
     {
         if (File.Exists(filePath))
         {
@@ -82,7 +82,7 @@ public class UIWindowEditor : EditorWindow
     /// </summary>
     /// <param name="content"></param>
     /// <returns></returns>
-    public int GetInsertIndex(string content)
+    private int GetInsertIndex(string content)
     {
         // 找到UI事件组件下面的第一个public 所在的位置 进行插入
         Regex regex = new Regex("UI组件事件");
