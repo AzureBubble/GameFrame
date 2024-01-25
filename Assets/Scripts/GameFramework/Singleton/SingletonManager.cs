@@ -234,11 +234,32 @@ public static class SingletonManager
     /// <summary>
     /// 销毁所有单例
     /// </summary>
-    private static void DestoryAllSingleton()
+    /// <param name="filterList">过滤列表</param>
+    public static void DestoryAllSingleton(List<Type> filterList = null)
     {
-        foreach (var singleton in singletons.Values)
+        if (filterList != null)
         {
-            singleton?.Dispose();
+            List<Type> removeList = new List<Type>();
+            foreach (var type in singletons.Keys)
+            {
+                if (!filterList.Contains(type))
+                {
+                    removeList.Add(type);
+                }
+            }
+
+            for (int i = 0; i < removeList.Count; i++)
+            {
+                singletons[removeList[i]]?.Dispose();
+                singletons.Remove(removeList[i]);
+            }
+        }
+        else
+        {
+            foreach (var singleton in singletons.Values)
+            {
+                singleton?.Dispose();
+            }
         }
     }
 
