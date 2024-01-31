@@ -1,6 +1,8 @@
 # GameFramework
 > 由于这个框架用的是Unity编辑器2022.3.13f1c1,2022会有一些Bug,❗️如果不使用这个版本，导入文件后，只需要自行去PackageManager中安装NewtonsoftJson、InputSystem和Addressables即可消除报错。
 >
+> - 单例管理器：管理全局所有的单例，相对于传统的单例模式创建，这样更便于对单例的管理和销毁，且如果需要进行帧更新的单例可以继承IUpdateSingleton接口即可实现单例帧更新函数OnUpdate，且这个帧更新的单例可以单独设置优先级，控制单例的帧更新顺序。
+> 
 > - Excel数据表读取模块：过使用Unity的编辑器自定义功能和Unity官方提供的ExcelDll，编写了一个可以直接在Unity编辑器Project窗口选择对应的Excel文件夹或是直接读取对应路径文件自动生成Binary和Json数据文件，以及相对应的数据结构类的工具。
 >
 > - 数据持久化管理模块：中包含四种数据持久化的方式：PlayerPres、XML、Json、Binary。开发者可以直接相对应的模块管理器里的方法直接对数据进行序列化和反序列化，其中的部分功能实现用到了一些反射知识，由于官方的JsonUtilities不支持字典的序列化，我增加了一个第三方Json插件NewtonsoftJson，开发者可以通过枚举进行选择自己想要的方式进行数据的序列化和反序列化并进行本地数据持久化存储。
