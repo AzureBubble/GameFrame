@@ -11,10 +11,11 @@ using UnityEngine.Events;
 /// </summary>
 public static class SingletonManager
 {
-    private static bool isInitialize;
+    private static bool isInitialize; // 是否初始化单例管理器
     private static List<IUpdateSingleton> updateSingletons = new List<IUpdateSingleton>(50);
     private static Dictionary<Type, ISingleton> singletons = new Dictionary<Type, ISingleton>(50);
     private static MonoController monoController;
+    private static bool isDirty; // 是否排序 updateSingletons
 
     /// <summary>
     /// 初始化 Singleton 管理器
@@ -34,13 +35,28 @@ public static class SingletonManager
     /// </summary>
     private static void OnUpdate()
     {
-        if (updateSingletons.Count > 0)
+        if (updateSingletons.Count == 0) return;
+
+        if (isDirty)
         {
-            foreach (var item in updateSingletons)
+            isDirty = false;
+            updateSingletons.Sort((left, right) =>
             {
-                item?.OnUpdate();
-            }
+                if (left.Priority > right.Priority) return -1;
+                else if (left.Priority == right.Priority) return 0;
+                else return 1;
+            });
         }
+
+        for (int i = updateSingletons.Count - 1; i >= 0; i--)
+        {
+            updateSingletons[i]?.OnUpdate();
+        }
+
+        //foreach (var singleton in updateSingletons)
+        //{
+        //    singleton?.OnUpdate();
+        //}
     }
 
     /// <summary>
@@ -58,14 +74,20 @@ public static class SingletonManager
 
         T singleton = Activator.CreateInstance<T>();
         singleton.Initialize();
-        switch (singleton)
+
+        if (singleton is IUpdateSingleton updateSingleton)
         {
-            case IUpdateSingleton UpdateSingleton:
-                {
-                    updateSingletons.Add(singleton as IUpdateSingleton);
-                    break;
-                }
+            updateSingletons.Add(updateSingleton);
+            isDirty = true;
         }
+        //switch (singleton)
+        //{
+        //    case IUpdateSingleton UpdateSingleton:
+        //        {
+        //            updateSingletons.Add(singleton as IUpdateSingleton);
+        //            break;
+        //        }
+        //}
 
         singletons.Add(type, singleton);
         return singleton;
@@ -136,16 +158,20 @@ public static class SingletonManager
     /// <typeparam name="T"></typeparam>
     /// <param name="isUpdateSingleton">是否是Update的单例对象</param>
     /// <returns></returns>
-    public static bool DestorySingleton<T>(bool isUpdateSingleton = false) where T : class, ISingleton
+    public static bool DestorySingleton<T>() where T : class, ISingleton
     {
         Type type = typeof(T);
         if (singletons.ContainsKey(type))
         {
             ISingleton tempSingleton = singletons[type];
-            if (isUpdateSingleton)
+            if (tempSingleton is IUpdateSingleton updateSingleton)
             {
-                updateSingletons.Remove(tempSingleton as IUpdateSingleton);
+                updateSingletons.Remove(updateSingleton);
             }
+            //if (isUpdateSingleton)
+            //{
+            //    updateSingletons.Remove(tempSingleton as IUpdateSingleton);
+            //}
             tempSingleton.Dispose();
             singletons.Remove(type);
             return true;
@@ -260,6 +286,7 @@ public static class SingletonManager
             {
                 singleton?.Dispose();
             }
+            singletons.Clear();
         }
     }
 

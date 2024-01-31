@@ -10,6 +10,7 @@ namespace GameFramework.GFInputManager
     /// </summary>
     public class InputMgr : Singleton<InputMgr>, IUpdateSingleton
     {
+        public int Priority => 0;
         private bool canInput; // 是否可输入
         private List<ICommand> commands; // 命令容器
         private Dictionary<KeyCode, List<E_KeyCode_Command_Type>> keyCodes; // 存储已经注册按键

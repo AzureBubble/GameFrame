@@ -33,6 +33,8 @@ namespace GameFramework.GFInputManager
     [Obsolete("建议使用命令模式的InputManager")]
     public class InputManager : Singleton<InputManager>, IInputManager, IUpdateSingleton
     {
+        public int Priority => 1;
+
         // 按键控制栈  如场景一用一套按键，场景二用一套按键
         public Stack<InputController> InputStacks { get; private set; }
 
