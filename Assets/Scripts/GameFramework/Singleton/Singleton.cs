@@ -1,18 +1,23 @@
+using System;
+
 public abstract class Singleton<T> : ISingleton where T : class, ISingleton
 {
-    private static T instance;
+    private static Lazy<T> instance = new Lazy<T>(() => SingletonManager.CreateSingleton<T>());
+    public static T Instance => instance.Value;
 
-    public static T Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = SingletonManager.CreateSingleton<T>();
-            }
-            return instance;
-        }
-    }
+    //private static T instance;
+
+    //public static T Instance
+    //{
+    //    get
+    //    {
+    //        if (instance == null)
+    //        {
+    //            instance = SingletonManager.CreateSingleton<T>();
+    //        }
+    //        return instance;
+    //    }
+    //}
 
     public bool IsDisposed { get; set; }
 
