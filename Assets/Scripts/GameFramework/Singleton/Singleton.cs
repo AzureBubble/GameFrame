@@ -23,7 +23,7 @@ public abstract class Singleton<T> : ISingleton where T : class, ISingleton
     public virtual void Dispose()
     {
         IsDisposed = true;
-        instance = null;
+        instance = new System.Lazy<T>(SingletonManager.CreateSingleton<T>());
     }
 }
 
