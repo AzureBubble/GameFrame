@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a78b63dd6b9878a47a077b1d3008ed64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  excelPath: ArtRes/Excel/
-  dataClassPath: Scripts/ExcelData/DataClass/
-  dataContainerPath: Scripts/ExcelData/Container/
-  dataBinaryPath: Binary/
-  dataJsonPath: Json/
+  excelPath: Assets/ArtRes/Excel
+  dataClassPath: Assets/Scripts/ExcelData/DataClass
+  dataContainerPath: Assets/Scripts/ExcelData/Container
+  dataBinaryPath: Assets/StreamingAssets/Binary
+  dataJsonPath: Assets/StreamingAssets/Binary

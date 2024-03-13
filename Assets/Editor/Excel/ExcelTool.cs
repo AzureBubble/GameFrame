@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
 
 namespace GameFramework.GameTool
 {
@@ -125,8 +124,16 @@ namespace GameFramework.GameTool
             {
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label($"读表路径:Assets/{excelPathProperty.stringValue}");
-                    excelPathProperty.stringValue = GUILayout.TextField(excelPathProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.Label($"读表路径:{excelPathProperty.stringValue}");
+                    // excelPathProperty.stringValue = GUILayout.TextField(excelPathProperty.stringValue, GUILayout.Width(400f));
+                    if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
+                    {
+                        string newFolderPath = EditorUtility.OpenFolderPanel("Select Excel Folder", excelPathProperty.stringValue, "");
+                        if (!string.IsNullOrEmpty(newFolderPath))
+                        {
+                            excelPathProperty.stringValue = newFolderPath.Replace(Application.dataPath, "Assets");
+                        }
+                    }
                 }
                 GUILayout.EndHorizontal();
 
@@ -134,8 +141,16 @@ namespace GameFramework.GameTool
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label($"数据结构类存储路径:Assets/{dataClassPathProperty.stringValue}");
-                    dataClassPathProperty.stringValue = GUILayout.TextField(dataClassPathProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.Label($"数据结构类存储路径:{dataClassPathProperty.stringValue}");
+                    // dataClassPathProperty.stringValue = GUILayout.TextField(dataClassPathProperty.stringValue, GUILayout.Width(400f));
+                    if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
+                    {
+                        string newFolderPath = EditorUtility.OpenFolderPanel("Select Save DataClass Folder", dataClassPathProperty.stringValue, "");
+                        if (!string.IsNullOrEmpty(newFolderPath))
+                        {
+                            dataClassPathProperty.stringValue = newFolderPath.Replace(Application.dataPath, "Assets");
+                        }
+                    }
                 }
                 GUILayout.EndHorizontal();
 
@@ -143,8 +158,16 @@ namespace GameFramework.GameTool
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label($"数据容器类存储路径:Assets/{dataContainerPathProperty.stringValue}");
-                    dataContainerPathProperty.stringValue = GUILayout.TextField(dataContainerPathProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.Label($"数据容器类存储路径:{dataContainerPathProperty.stringValue}");
+                    // dataContainerPathProperty.stringValue = GUILayout.TextField(dataContainerPathProperty.stringValue, GUILayout.Width(400f));
+                    if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
+                    {
+                        string newFolderPath = EditorUtility.OpenFolderPanel("Select Save DataContainer Folder", dataContainerPathProperty.stringValue, "");
+                        if (!string.IsNullOrEmpty(newFolderPath))
+                        {
+                            dataContainerPathProperty.stringValue = newFolderPath.Replace(Application.dataPath, "Assets");
+                        }
+                    }
                 }
                 GUILayout.EndHorizontal();
 
@@ -152,8 +175,16 @@ namespace GameFramework.GameTool
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label($"二进制数据存储路径:Assets/StreamingAssets/{dataBinaryPathProperty.stringValue}");
-                    dataBinaryPathProperty.stringValue = GUILayout.TextField(dataBinaryPathProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.Label($"二进制数据存储路径:{dataBinaryPathProperty.stringValue}");
+                    if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
+                    {
+                        string newFolderPath = EditorUtility.OpenFolderPanel("Select Save DataBinary Folder", dataBinaryPathProperty.stringValue, "");
+                        if (!string.IsNullOrEmpty(newFolderPath))
+                        {
+                            dataBinaryPathProperty.stringValue = newFolderPath.Replace(Application.dataPath, "Assets");
+                        }
+                    }
+                    // dataBinaryPathProperty.stringValue = GUILayout.TextField(dataBinaryPathProperty.stringValue, GUILayout.Width(400f));
                 }
                 GUILayout.EndHorizontal();
 
@@ -161,8 +192,16 @@ namespace GameFramework.GameTool
 
                 GUILayout.BeginHorizontal();
                 {
-                    GUILayout.Label($"Json数据存储路径:Assets/StreamingAssets/{dataJsonPathProperty.stringValue}");
-                    dataJsonPathProperty.stringValue = GUILayout.TextField(dataJsonPathProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.Label($"Json数据存储路径:{dataJsonPathProperty.stringValue}");
+                    // dataJsonPathProperty.stringValue = GUILayout.TextField(dataJsonPathProperty.stringValue, GUILayout.Width(400f));
+                    if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
+                    {
+                        string newFolderPath = EditorUtility.OpenFolderPanel("Select Save DataJson Folder", dataJsonPathProperty.stringValue, "");
+                        if (!string.IsNullOrEmpty(newFolderPath))
+                        {
+                            dataJsonPathProperty.stringValue = newFolderPath.Replace(Application.dataPath, "Assets");
+                        }
+                    }
                 }
                 GUILayout.EndHorizontal();
             }
@@ -220,9 +259,8 @@ namespace GameFramework.GameTool
         {
             if (filePath == null)
             {
-                filePath = Application.dataPath + "/" + excelPathProperty.stringValue;
+                filePath = excelPathProperty.stringValue.Replace("Assets", Application.dataPath) + '/';
             }
-
             // 创建一个目录对象，如果不存在的话，就创建一个目录
             DirectoryInfo dInfo = Directory.CreateDirectory(filePath);
 
@@ -264,7 +302,7 @@ namespace GameFramework.GameTool
             }
             if (count == 0)
             {
-                Debug.Log("所选文件夹中没有Excel配置表文件");
+                Debug.LogError("所选文件夹中没有Excel配置表文件:" + excelPathProperty.stringValue);
             }
             AssetDatabase.Refresh();
         }
@@ -277,7 +315,7 @@ namespace GameFramework.GameTool
         {
             if (filePath == null)
             {
-                filePath = Application.dataPath + "/" + excelPathProperty.stringValue;
+                filePath = excelPathProperty.stringValue.Replace("Assets", Application.dataPath) + '/';
             }
             // 创建一个目录对象，如果不存在的话，就创建一个目录
             DirectoryInfo dInfo = Directory.CreateDirectory(filePath);
@@ -338,7 +376,7 @@ namespace GameFramework.GameTool
             // 字段描述行
             DataRow rowDescription = GetVariableDescriptionRow(table);
 
-            tempString = new StringBuilder(Application.dataPath + "/" + dataClassPathProperty.stringValue);
+            tempString = new StringBuilder(dataClassPathProperty.stringValue.Replace("Assets", Application.dataPath) + '/');
 
             if (tempString[tempString.Length - 1] != '/')
             {
@@ -389,7 +427,7 @@ namespace GameFramework.GameTool
             // 得到字段类型行
             DataRow rowType = GetVariableTypeRow(table);
 
-            tempString = new StringBuilder(Application.dataPath + "/" + dataContainerPathProperty.stringValue);
+            tempString = new StringBuilder(dataContainerPathProperty.stringValue.Replace("Assets", Application.dataPath) + '/');
 
             if (tempString[tempString.Length - 1] != '/')
             {
@@ -421,7 +459,7 @@ namespace GameFramework.GameTool
         /// <param name="table">数据表</param>
         private void GenerateExcelToBinary(DataTable table)
         {
-            tempString = new StringBuilder(Application.streamingAssetsPath + "/" + dataBinaryPathProperty.stringValue);
+            tempString = new StringBuilder(dataBinaryPathProperty.stringValue);
 
             if (tempString[tempString.Length - 1] != '/')
             {
@@ -499,7 +537,7 @@ namespace GameFramework.GameTool
             // 字段类型行
             DataRow rowType = GetVariableTypeRow(table);
 
-            tempString = new StringBuilder(Application.streamingAssetsPath + "/" + dataJsonPathProperty.stringValue);
+            tempString = new StringBuilder(dataJsonPathProperty.stringValue);
 
             if (tempString[tempString.Length - 1] != '/')
             {
