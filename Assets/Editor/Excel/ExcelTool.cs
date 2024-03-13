@@ -126,6 +126,8 @@ namespace GameFramework.GameTool
                 {
                     GUILayout.Label($"读表路径:{excelPathProperty.stringValue}");
                     // excelPathProperty.stringValue = GUILayout.TextField(excelPathProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.FlexibleSpace(); // 插入弹性空间
+                    GUILayout.Label("Select Excel Folder: ");
                     if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
                     {
                         string newFolderPath = EditorUtility.OpenFolderPanel("Select Excel Folder", excelPathProperty.stringValue, "");
@@ -143,6 +145,8 @@ namespace GameFramework.GameTool
                 {
                     GUILayout.Label($"数据结构类存储路径:{dataClassPathProperty.stringValue}");
                     // dataClassPathProperty.stringValue = GUILayout.TextField(dataClassPathProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.FlexibleSpace(); // 插入弹性空间
+                    GUILayout.Label("Select Save DataClass Folder: ");
                     if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
                     {
                         string newFolderPath = EditorUtility.OpenFolderPanel("Select Save DataClass Folder", dataClassPathProperty.stringValue, "");
@@ -160,6 +164,8 @@ namespace GameFramework.GameTool
                 {
                     GUILayout.Label($"数据容器类存储路径:{dataContainerPathProperty.stringValue}");
                     // dataContainerPathProperty.stringValue = GUILayout.TextField(dataContainerPathProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.FlexibleSpace(); // 插入弹性空间
+                    GUILayout.Label("Select Save DataContainer Folder: ");
                     if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
                     {
                         string newFolderPath = EditorUtility.OpenFolderPanel("Select Save DataContainer Folder", dataContainerPathProperty.stringValue, "");
@@ -176,6 +182,8 @@ namespace GameFramework.GameTool
                 GUILayout.BeginHorizontal();
                 {
                     GUILayout.Label($"二进制数据存储路径:{dataBinaryPathProperty.stringValue}");
+                    GUILayout.FlexibleSpace(); // 插入弹性空间
+                    GUILayout.Label("Select Save DataBinary Folder: ");
                     if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
                     {
                         string newFolderPath = EditorUtility.OpenFolderPanel("Select Save DataBinary Folder", dataBinaryPathProperty.stringValue, "");
@@ -194,6 +202,8 @@ namespace GameFramework.GameTool
                 {
                     GUILayout.Label($"Json数据存储路径:{dataJsonPathProperty.stringValue}");
                     // dataJsonPathProperty.stringValue = GUILayout.TextField(dataJsonPathProperty.stringValue, GUILayout.Width(400f));
+                    GUILayout.FlexibleSpace(); // 插入弹性空间
+                    GUILayout.Label("Select Save DataJson Folder: ");
                     if (GUILayout.Button("Select Folder", GUILayout.Width(200)))
                     {
                         string newFolderPath = EditorUtility.OpenFolderPanel("Select Save DataJson Folder", dataJsonPathProperty.stringValue, "");
