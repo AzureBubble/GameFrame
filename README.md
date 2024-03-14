@@ -28,3 +28,4 @@
 > 持续更新优化......
 > 游戏框架项目功能介绍
 > https://azurebubble.github.io/2024/01/06/Untiy%E6%B8%B8%E6%88%8F%E6%A1%86%E6%9E%B6QZGameFramework/
+> Unity2021.3.16f1c1仓库地址；https://github.com/AzureBubble/QZGameFramework
